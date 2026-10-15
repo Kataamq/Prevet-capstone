@@ -5,49 +5,55 @@
 :root {
     color-scheme: light;
 
-    /* Violeta suave. Con blanco encima da 5,2:1 de contraste. */
+    /* Modo día: la misma idea del inicio de sesión, en claro. */
     --acento: #6b5ad4;
     --acento-osc: #5947bd;
+    --acento-hover: #5947bd;
     --sobre-acento: #ffffff;
-    --acento-bg: #f0eefc;
-    --acento-bg2: #e2ddf8;
+    --acento-bg: rgba(107, 90, 212, .10);
+    --acento-bg2: rgba(107, 90, 212, .18);
 
-    /* Superficies casi neutras con un dejo lavanda, no teñidas. */
-    --bg: #f8f7fc;
-    --card: #ffffff;
-    --sidebar: #f4f1fc;
-    --panel: #fbfafe;
-    --hover: #f4f2fb;
+    --fondo-1: #f7f4ff;
+    --fondo-2: #e7e0ff;
+    --brillo-1: rgba(165, 148, 242, .35);
+    --brillo-2: rgba(139, 120, 230, .25);
+    --bg: #f4f1ff;
+    --card: rgba(255, 255, 255, .72);
+    --sidebar: rgba(255, 255, 255, .62);
+    --panel: rgba(255, 255, 255, .55);
+    --hover: rgba(107, 90, 212, .07);
+    --solido: #ffffff;
+    --barra: rgba(255, 255, 255, .6);
 
     --titulo: #1e1b2e;
     --texto: #423e55;
-    --gris: #726e88;
-    --gris-claro: #a5a1b8;
+    --gris: #6e6890;
+    --gris-claro: #9a94b8;
 
-    --borde: #ebe9f3;
-    --borde-suave: #f3f1f9;
-    --borde-fuerte: #d7d3e8;
+    --borde: rgba(107, 90, 212, .16);
+    --borde-suave: rgba(107, 90, 212, .09);
+    --borde-fuerte: rgba(107, 90, 212, .30);
 
     --ok-bg: #e9f7ef;    --ok-txt: #16794f;   --ok-borde: #c3e6d3;
     --warn-bg: #fdf3e4;  --warn-txt: #93600c; --warn-borde: #f2dcb2;
     --error-bg: #fdeef0; --error-txt: #b0293c; --error-borde: #f6cbd2;
     --info-bg: #eaf1fd;  --info-txt: #2059ad; --info-borde: #c8dbf7;
-    --neutro-bg: #f1f0f6; --neutro-txt: #5c5872;
+    --neutro-bg: rgba(107, 90, 212, .07); --neutro-txt: #5c5872;
 
     --verde: #17945f;
     --ambar: #dd9a12;
     --rojo: #d94a5e;
 
-    --tinte: linear-gradient(135deg, #f1effd 0%, #e3ddf9 100%);
-    --sombra-card: 0 1px 2px rgba(30, 27, 46, .05);
-    --sombra-acento: 0 4px 12px rgba(107, 90, 212, .24);
+    --tinte: linear-gradient(135deg, rgba(165, 148, 242, .25), rgba(107, 90, 212, .10));
+    --sombra-card: 0 10px 30px rgba(80, 60, 160, .10);
+    --sombra-acento: 0 6px 18px rgba(107, 90, 212, .28);
 
     /* Nombres antiguos, mantenidos para no reescribir cada regla. */
     --azul: var(--acento);
     --azul-osc: var(--acento-osc);
     --navy: var(--titulo);
 
-    --radio: 0;
+    --radio: 12px;
 }
 
 /* Paleta del inicio de sesión: violeta profundo, vidrio y lila.
@@ -71,6 +77,10 @@
     --hover: rgba(255, 255, 255, .08);
     /* Para lo que flota encima de todo (paneles, ventanas): sin transparencia. */
     --solido: #221a4c;
+    --barra: rgba(26, 19, 56, .55);
+    --acento-hover: #b7a9f7;
+    --brillo-1: rgba(139, 120, 230, .30);
+    --brillo-2: rgba(107, 90, 212, .26);
 
     --titulo: #ffffff;
     --texto: #e4dff7;
@@ -1660,45 +1670,31 @@ table tbody tr:hover { background: var(--hover); }
 .det-cancelar form { display: flex; flex-direction: column; gap: .7rem; margin-top: .8rem; }
 
 
-/* ============ ESTILO DEL INICIO DE SESIÓN EN TODO PREVET ============ */
-[data-tema="oscuro"] body {
+/* ============ ESTILO DEL INICIO DE SESIÓN EN TODO PREVET ============
+   Vale para los dos modos: cambian solo los colores (variables de arriba). */
+body {
     background:
-        radial-gradient(circle at 15% 20%, rgba(139, 120, 230, .30), transparent 40%),
-        radial-gradient(circle at 85% 80%, rgba(107, 90, 212, .26), transparent 45%),
+        radial-gradient(circle at 15% 20%, var(--brillo-1), transparent 40%),
+        radial-gradient(circle at 85% 80%, var(--brillo-2), transparent 45%),
         linear-gradient(135deg, var(--fondo-1), var(--fondo-2));
     background-attachment: fixed;
 }
 
 /* Vidrio: lo translúcido difumina lo que hay detrás, como en el login. */
-[data-tema="oscuro"] .card,
-[data-tema="oscuro"] .metrica,
-[data-tema="oscuro"] .tarjeta-animal,
-[data-tema="oscuro"] .sidebar,
-[data-tema="oscuro"] .topbar,
-[data-tema="oscuro"] .barra-movil {
+.card, .metrica, .tarjeta-animal, .sidebar, .topbar, .barra-movil {
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
 }
-[data-tema="oscuro"] .topbar { background: rgba(26, 19, 56, .55); }
+.topbar { background: var(--barra); }
 
 /* Lo que se abre encima de la página va opaco, para que se lea bien. */
-[data-tema="oscuro"] .modal,
-[data-tema="oscuro"] .panel-cita,
-[data-tema="oscuro"] .panel-cerrar,
-[data-tema="oscuro"] .cal-cargando { background: var(--solido); }
+.modal, .panel-cita, .panel-cerrar, .cal-cargando { background: var(--solido); }
 
 /* Los menús desplegables nativos no aceptan transparencia. */
-[data-tema="oscuro"] select option { background: var(--solido); color: var(--texto); }
+select option { background: var(--solido); color: var(--texto); }
 
 /* El botón principal, igual al "Entrar" del login. */
-[data-tema="oscuro"] .btn-primario {
-    background: var(--acento);
-    color: var(--sobre-acento);
-    border-color: var(--acento);
-}
-[data-tema="oscuro"] .btn-primario:hover { background: #b7a9f7; }
+.btn-primario { background: var(--acento); color: var(--sobre-acento); border-color: var(--acento); }
+.btn-primario:hover { background: var(--acento-hover); }
 
-[data-tema="oscuro"] .badge { border-radius: 999px; }
-
-/* El estilo es uno solo: ya no hay cambio entre día y noche. */
-.btn-tema { display: none !important; }
+.badge { border-radius: 999px; }

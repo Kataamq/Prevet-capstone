@@ -1,9 +1,65 @@
-/* Colores del inicio de sesión de PreVet. Son los mismos en modo día y
-   noche, así el panel se ve igual sin importar la preferencia del equipo. */
+/* Colores del inicio de sesión de PreVet para el panel /admin/.
+   Modo día: la paleta del login en claro. Modo noche: igual al login.
+   El panel trae su propio botón para cambiar de modo. */
 html[data-theme="light"],
-html[data-theme="dark"],
-html[data-theme="auto"],
 :root {
+        --primary: rgba(107, 90, 212, .14);
+        --secondary: #e7e0ff;
+        --accent: #1e1b2e;
+        --primary-fg: #1e1b2e;
+
+        --body-fg: #423e55;
+        --body-bg: #f4f1ff;
+        --body-quiet-color: #6e6890;
+        --body-loud-color: #1e1b2e;
+
+        --header-color: #423e55;
+        --header-branding-color: #1e1b2e;
+        --header-bg: rgba(255, 255, 255, .6);
+        --header-link-color: #5947bd;
+
+        --breadcrumbs-fg: #6e6890;
+        --breadcrumbs-link-fg: #6b5ad4;
+        --breadcrumbs-bg: rgba(255, 255, 255, .5);
+
+        --link-fg: #6b5ad4;
+        --link-hover-color: #5947bd;
+        --link-selected-fg: #5947bd;
+
+        --hairline-color: rgba(107, 90, 212, .12);
+        --border-color: rgba(107, 90, 212, .28);
+
+        --error-fg: #b0293c;
+        --message-success-bg: #e9f7ef;
+        --message-warning-bg: #fdf3e4;
+        --message-error-bg: #fdeef0;
+
+        --darkened-bg: rgba(107, 90, 212, .05);
+        --selected-bg: rgba(107, 90, 212, .10);
+        --selected-row: rgba(107, 90, 212, .14);
+
+        --button-fg: #ffffff;
+        --button-bg: #6b5ad4;
+        --button-hover-bg: #5947bd;
+        --default-button-bg: #6b5ad4;
+        --default-button-hover-bg: #5947bd;
+
+        --close-button-bg: rgba(107, 90, 212, .18);
+        --close-button-hover-bg: rgba(107, 90, 212, .28);
+        --object-tools-bg: rgba(107, 90, 212, .18);
+        --object-tools-hover-bg: rgba(107, 90, 212, .28);
+
+        --font-family-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif;
+        --fondo-1: #f7f4ff;
+        --fondo-2: #e7e0ff;
+        --brillo-1: rgba(165, 148, 242, .35);
+        --brillo-2: rgba(139, 120, 230, .25);
+        --modulo: rgba(255, 255, 255, .7);
+        --opcion: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+    html[data-theme="auto"] {
         --primary: rgba(165, 148, 242, .22);
         --secondary: #2b2160;
         --accent: #ffffff;
@@ -51,6 +107,69 @@ html[data-theme="auto"],
         --object-tools-hover-bg: rgba(255, 255, 255, .2);
 
         --font-family-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif;
+        --fondo-1: #1a1338;
+        --fondo-2: #2b2160;
+        --brillo-1: rgba(139, 120, 230, .30);
+        --brillo-2: rgba(107, 90, 212, .26);
+        --modulo: rgba(255, 255, 255, .05);
+        --opcion: #221a4c;
+    }
+}
+
+html[data-theme="dark"] {
+        --primary: rgba(165, 148, 242, .22);
+        --secondary: #2b2160;
+        --accent: #ffffff;
+        --primary-fg: #ffffff;
+
+        --body-fg: #e4dff7;
+        --body-bg: #1a1338;
+        --body-quiet-color: #b8b0dc;
+        --body-loud-color: #ffffff;
+
+        --header-color: #e4dff7;
+        --header-branding-color: #ffffff;
+        --header-bg: rgba(26, 19, 56, .65);
+        --header-link-color: #ffffff;
+
+        --breadcrumbs-fg: #b8b0dc;
+        --breadcrumbs-link-fg: #a594f2;
+        --breadcrumbs-bg: rgba(255, 255, 255, .05);
+
+        --link-fg: #a594f2;
+        --link-hover-color: #c4b8f7;
+        --link-selected-fg: #c4b8f7;
+
+        --hairline-color: rgba(165, 148, 242, .18);
+        --border-color: rgba(165, 148, 242, .35);
+
+        --error-fg: #f6a9b6;
+        --message-success-bg: rgba(88, 211, 154, .18);
+        --message-warning-bg: rgba(227, 178, 99, .2);
+        --message-error-bg: rgba(240, 148, 164, .2);
+
+        --darkened-bg: rgba(255, 255, 255, .05);
+        --selected-bg: rgba(165, 148, 242, .16);
+        --selected-row: rgba(165, 148, 242, .22);
+
+        --button-fg: #1a1338;
+        --button-bg: #a594f2;
+        --button-hover-bg: #b7a9f7;
+        --default-button-bg: #a594f2;
+        --default-button-hover-bg: #b7a9f7;
+
+        --close-button-bg: rgba(255, 255, 255, .12);
+        --close-button-hover-bg: rgba(255, 255, 255, .2);
+        --object-tools-bg: rgba(255, 255, 255, .12);
+        --object-tools-hover-bg: rgba(255, 255, 255, .2);
+
+        --font-family-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif;
+        --fondo-1: #1a1338;
+        --fondo-2: #2b2160;
+        --brillo-1: rgba(139, 120, 230, .30);
+        --brillo-2: rgba(107, 90, 212, .26);
+        --modulo: rgba(255, 255, 255, .05);
+        --opcion: #221a4c;
 }
 
 /* Barra de arriba: la huellita y el nombre, como en el resto del sistema. */
@@ -81,10 +200,9 @@ html[data-theme="auto"],
 /* Fondo violeta con brillos, como el inicio de sesión. */
 html, body {
     background:
-        radial-gradient(circle at 15% 20%, rgba(139, 120, 230, .30), transparent 40%),
-        radial-gradient(circle at 85% 80%, rgba(107, 90, 212, .26), transparent 45%),
-        linear-gradient(135deg, #1a1338, #2b2160) fixed;
-    color-scheme: dark;
+        radial-gradient(circle at 15% 20%, var(--brillo-1), transparent 40%),
+        radial-gradient(circle at 85% 80%, var(--brillo-2), transparent 45%),
+        linear-gradient(135deg, var(--fondo-1), var(--fondo-2)) fixed;
 }
 #header { backdrop-filter: blur(14px); border-bottom: 1px solid var(--border-color); }
 .module, .inline-group, #changelist-filter, .selector-available, .selector-chosen,
@@ -92,9 +210,10 @@ html, body {
     border-radius: 12px;
     overflow: hidden;
 }
-.module { background: rgba(255, 255, 255, .05); backdrop-filter: blur(14px); }
+.module { background: var(--modulo); backdrop-filter: blur(14px); }
 .button, input[type=submit], input[type=button], .submit-row input, a.button,
 input[type=text], input[type=password], input[type=email], input[type=url],
 input[type=number], input[type=tel], textarea, select, .vTextField { border-radius: 10px; }
-select option { background: #221a4c; }
+select option { background: var(--opcion); }
 .marca-logo { border-radius: 10px; background: linear-gradient(135deg, #b7a9f7, #8b78e6); color: #1a1338; }
+#site-name a.marca:link, #site-name a.marca:visited { color: var(--header-branding-color); }

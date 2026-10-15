@@ -7,9 +7,17 @@
     <link rel="icon" type="image/svg+xml" href="{% static 'img/favicon.svg' %}">
     <title>{% block titulo %}PreVet{% endblock %} · PreVet</title>
 
+    {% comment %}
+        Se aplica el modo antes de pintar, para que no parpadee al recargar.
+        Por defecto es el modo noche, igual al inicio de sesión; si la persona
+        eligió el modo día, se recuerda.
+    {% endcomment %}
     <script>
-        // Todo PreVet usa la paleta del inicio de sesión (violeta oscuro).
-        document.documentElement.setAttribute('data-tema', 'oscuro');
+        (function () {
+            if (localStorage.getItem('tema') === 'claro') {
+                document.documentElement.removeAttribute('data-tema');
+            }
+        })();
     </script>
 
     <link rel="stylesheet" href="{% static 'css/prevet.css' %}">
