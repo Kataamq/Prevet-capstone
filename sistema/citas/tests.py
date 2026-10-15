@@ -506,3 +506,18 @@ class CalendarioTest(TestCase):
         User.objects.create_user('mirón', password=self.CLAVE)
         self.client.login(username='mirón', password=self.CLAVE)
         self.assertEqual(self.client.post(f'/citas/{c.pk}/cancelar/', {'motivo': 'Otro'}).status_code, 403)
+
+
+class WhatsAppTest(CalendarioTest):
+    """El panel de la cita trae un enlace de WhatsApp con el recordatorio."""
+
+    def test_enlace_con_codigo_de_chile_y_mensaje(self):
+        self.ana.telefono = '9 1234 5678'
+        self.ana.save()
+        respuesta = self.client.get(f'/citas/{self.cita().pk}/detalle/')
+        self.assertContains(respuesta, 'https://wa.me/56912345678?text=Hola%20Ana')
+
+    def test_sin_telefono_no_hay_enlace(self):
+        respuesta = self.client.get(f'/citas/{self.cita().pk}/detalle/')
+        self.assertNotContains(respuesta, 'wa.me')
+        self.assertContains(respuesta, 'Sin teléfono registrado')

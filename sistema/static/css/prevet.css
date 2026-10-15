@@ -1635,7 +1635,7 @@ table tbody tr:hover { background: var(--hover); }
 
 /* La grilla: contenedor redondeado y líneas suaves. */
 .cal-card .fc .fc-scrollgrid { border-radius: var(--radio); overflow: hidden; border-color: var(--borde); }
-.cal-card .fc .fc-timegrid-slot { height: 2.4rem; }
+.cal-card .fc .fc-timegrid-slot { height: 2.6rem; }
 .cal-card .fc .fc-timegrid-slot-minor { border-top-style: dashed; }
 .cal-card .fc .fc-timegrid-slot-label-cushion,
 .cal-card .fc .fc-timegrid-axis-cushion { font-size: .74rem; color: var(--gris); }
@@ -1667,7 +1667,35 @@ table tbody tr:hover { background: var(--hover); }
     transition: transform .12s, box-shadow .12s;
 }
 .cal-card .fc .fc-event:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(10, 6, 30, .2); }
-.cal-card .fc .fc-event .fc-event-main { color: inherit; padding: .2rem .4rem; }
+.cal-card .fc .fc-event .fc-event-main { color: inherit; padding: .3rem .55rem; overflow: hidden; }
+
+/* Vista Día: bloques más altos y la información repartida a lo ancho. */
+.cal-card .fc .fc-timeGridDay-view .fc-timegrid-slot { height: 3.3rem; }
+.cal-card .fc .fc-timeGridDay-view .fc-event .fc-event-main { padding: .45rem .9rem; }
+.cal-card .fc .fc-timeGridDay-view .fc-timegrid-event-harness { margin-right: .6rem; }
+.ev-dia {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.2rem;
+    height: 100%;
+}
+.ev-dia .ev-principal { min-width: 0; display: flex; flex-direction: column; gap: .2rem; }
+.ev-dia .ev-titulo { font-size: .9rem; }
+.ev-dia .ev-detalle { font-size: .78rem; }
+.ev-meta { display: flex; gap: .45rem; flex-wrap: wrap; justify-content: flex-end; flex-shrink: 0; }
+.ev-chip {
+    font-size: .74rem;
+    padding: .22rem .65rem;
+    border-radius: 999px;
+    background: var(--hover);
+    border: 1px solid var(--borde-suave);
+    color: var(--texto);
+    white-space: nowrap;
+}
+@media (max-width: 700px) {
+    .ev-meta { display: none; }
+}
 .ev-caja { line-height: 1.25; overflow: hidden; }
 .ev-titulo { font-weight: 700; font-size: .8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ev-detalle { font-size: .72rem; color: var(--gris); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -1714,48 +1742,107 @@ table tbody tr:hover { background: var(--hover); }
 }
 
 /* --- panel lateral con el detalle de una cita --- */
-.panel-fondo { position: fixed; inset: 0; background: rgba(20, 16, 40, .35); z-index: 90; }
+.panel-fondo { position: fixed; inset: 0; background: rgba(20, 16, 40, .45); backdrop-filter: blur(2px); z-index: 90; }
 .panel-cita {
     position: fixed;
     top: 0; right: 0; bottom: 0;
-    width: min(420px, 100vw);
-    background: var(--card);
+    width: min(440px, 100vw);
     border-left: 1px solid var(--borde);
-    box-shadow: -10px 0 30px rgba(20, 16, 40, .18);
-    padding: 1.6rem 1.4rem;
+    box-shadow: -14px 0 40px rgba(10, 6, 30, .35);
+    padding: 1.6rem 1.5rem 2rem;
     overflow-y: auto;
     z-index: 91;
     transform: translateX(100%);
-    transition: transform .22s ease;
+    transition: transform .25s ease;
 }
 .panel-cita.abierto { transform: translateX(0); }
 .panel-cerrar {
-    position: absolute; top: .9rem; right: .9rem;
-    width: 34px; height: 34px;
-    border: 1px solid var(--borde); background: var(--card); cursor: pointer;
+    position: absolute; top: 1rem; right: 1rem;
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid var(--borde); cursor: pointer;
     display: grid; place-items: center;
+    transition: background .15s;
 }
+.panel-cerrar:hover { background: var(--hover); }
 .panel-cerrar svg { width: 18px; height: 18px; fill: var(--gris); }
 
-.det-cabecera { display: flex; align-items: center; gap: .8rem; margin-bottom: .9rem; padding-right: 2.5rem; }
-.det-emoji { font-size: 2rem; }
-.det-cabecera h3 { color: var(--titulo); font-size: 1.25rem; }
-.det-sub { color: var(--gris); font-size: .85rem; }
+/* Encabezado: la mascota en un círculo de color y su nombre. */
+.det-head { display: flex; align-items: center; gap: .9rem; padding-right: 2.6rem; }
+.det-avatar {
+    width: 56px; height: 56px; border-radius: 50%; flex-shrink: 0;
+    display: grid; place-items: center; font-size: 1.9rem;
+    background: var(--acento-bg); border: 1px solid var(--borde);
+}
+.det-head h3 { color: var(--titulo); font-size: 1.35rem; line-height: 1.2; }
+.det-sub { color: var(--gris); font-size: .85rem; margin-top: .15rem; }
 
-.det-datos { display: grid; grid-template-columns: 95px 1fr; gap: .45rem .8rem; margin: 1.1rem 0; font-size: .88rem; }
-.det-datos dt { color: var(--gris); }
-.det-datos dd { color: var(--texto); }
+.det-estados { display: flex; flex-wrap: wrap; gap: .4rem; margin: 1rem 0 .4rem; }
+.det-estado {
+    font-size: .75rem; font-weight: 700; letter-spacing: .3px;
+    padding: .28rem .75rem; border-radius: 999px;
+    color: var(--titulo);
+    background: color-mix(in srgb, var(--ev) 22%, transparent);
+    border: 1px solid color-mix(in srgb, var(--ev) 45%, transparent);
+}
 
-.det-riesgo { background: var(--panel); border: 1px solid var(--borde); padding: .8rem 1rem; font-size: .84rem; margin-bottom: 1rem; }
-.det-riesgo ul { margin: .4rem 0 0 1.1rem; color: var(--gris); }
+/* Secciones separadas por una línea suave. */
+.det-sec { padding: 1rem 0; border-bottom: 1px solid var(--borde-suave); }
+.det-sec-titulo {
+    font-size: .7rem; font-weight: 700; letter-spacing: .8px; text-transform: uppercase;
+    color: var(--gris-claro); margin-bottom: .6rem;
+}
+.det-fila { display: flex; gap: .8rem; align-items: flex-start; }
+.det-fila + .det-fila { margin-top: .85rem; }
+.det-ico {
+    width: 34px; height: 34px; border-radius: 10px; flex-shrink: 0;
+    display: grid; place-items: center; background: var(--hover);
+}
+.det-ico svg { width: 18px; height: 18px; fill: var(--acento); }
+.det-valor { color: var(--titulo); font-weight: 600; font-size: .95rem; }
+.det-valor-normal { font-weight: 400; font-size: .9rem; color: var(--texto); }
+.det-etiqueta { font-size: .75rem; color: var(--gris); }
+.det-nota { color: var(--gris); font-size: .82rem; margin-top: .1rem; }
+.det-contacto { display: flex; gap: .5rem; margin-top: .8rem; padding-left: 2.9rem; }
+.det-contacto .btn { padding: .45rem .9rem; font-size: .82rem; }
 
-.det-acciones { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
-.det-acciones form { display: inline; }
+/* Riesgo: puntaje grande, medidor de 0 a 100 y los motivos. */
+.det-riesgo.riesgo-alto  { --nivel: #e5566c; }
+.det-riesgo.riesgo-medio { --nivel: #e3a73d; }
+.det-riesgo.riesgo-bajo  { --nivel: #3fbf86; }
+.det-riesgo-cab { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: .6rem; }
+.det-riesgo-nivel { font-size: 1.1rem; font-weight: 700; color: var(--nivel); margin-top: .2rem; }
+.det-riesgo-puntaje { font-size: 1.9rem; font-weight: 800; color: var(--titulo); line-height: 1; }
+.det-riesgo-puntaje small { font-size: .85rem; color: var(--gris); font-weight: 600; }
+.det-medidor { height: 8px; border-radius: 999px; background: var(--hover); overflow: hidden; }
+.det-medidor span { display: block; height: 100%; border-radius: 999px; background: var(--nivel); }
+.det-factores { list-style: none; margin: .9rem 0 0; display: flex; flex-direction: column; gap: .45rem; }
+.det-factores li {
+    position: relative; padding-left: 1.1rem; font-size: .85rem; color: var(--texto);
+}
+.det-factores li::before {
+    content: ''; position: absolute; left: 0; top: .45rem;
+    width: 6px; height: 6px; border-radius: 50%; background: var(--nivel);
+}
+.det-sugerencia {
+    margin-top: .9rem; padding: .7rem .9rem; border-radius: 10px; font-size: .84rem;
+    color: var(--texto);
+    background: color-mix(in srgb, var(--nivel) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--nivel) 35%, transparent);
+}
 
-.det-cancelar { border-top: 1px solid var(--borde); padding-top: .9rem; }
-.det-cancelar summary { cursor: pointer; color: var(--error-txt); font-weight: 600; font-size: .88rem; }
+/* Acciones al final. */
+.det-acciones { display: flex; flex-direction: column; gap: .6rem; padding-top: 1.2rem; }
+.det-acciones form { margin: 0; }
+.det-btn-ancho { width: 100%; justify-content: center; }
+.det-acciones-fila { display: flex; flex-wrap: wrap; gap: .5rem; }
+.det-acciones-fila > * { flex: 1; }
+.det-acciones-fila .btn { width: 100%; justify-content: center; }
+
+.det-cancelar { margin-top: .4rem; border: 1px solid var(--borde-suave); border-radius: var(--radio); padding: .7rem .9rem; }
+.det-cancelar summary { cursor: pointer; color: var(--error-txt); font-weight: 600; font-size: .86rem; list-style: none; }
+.det-cancelar summary::-webkit-details-marker { display: none; }
+.det-cancelar summary::before { content: '✕  '; font-size: .75rem; }
 .det-cancelar form { display: flex; flex-direction: column; gap: .7rem; margin-top: .8rem; }
-
 
 /* ============ ESTILO DEL INICIO DE SESIÓN EN TODO PREVET ============
    Vale para los dos modos: cambian solo los colores (variables de arriba). */

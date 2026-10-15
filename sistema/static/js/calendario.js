@@ -37,6 +37,8 @@
         allDaySlot: false,
         nowIndicator: true,
         expandRows: true,
+        // Las atenciones cortas (20 minutos) igual muestran sus dos líneas.
+        eventMinHeight: 48,
         height: 'auto',
         dayMaxEvents: 3,
         noEventsText: 'No hay citas en este rango.',
@@ -54,24 +56,41 @@
         },
 
         // Contenido de cada cita: mascota en negrita y, debajo, hora y atención.
+        // En la vista Día, que es ancha, el cliente y el profesional van a la
+        // derecha como etiquetas, para que todo quede dentro del recuadro.
         eventContent: function (arg) {
             var p = arg.event.extendedProps;
+            var tipo = arg.view.type;
             var hora = FullCalendar.formatDate(arg.event.start,
                 { hour: '2-digit', minute: '2-digit', hour12: false, locale: 'es' });
-            var caja = document.createElement('div');
-            caja.className = 'ev-caja';
+
             var titulo = nodo('div', 'ev-titulo', p.emoji + ' ' + p.mascota);
             if (p.riesgo === 'alto') titulo.appendChild(nodo('span', 'ev-alerta', ' ⚠'));
-            caja.appendChild(titulo);
-            if (arg.view.type === 'dayGridMonth') {
+
+            var caja = document.createElement('div');
+            caja.className = 'ev-caja';
+
+            if (tipo === 'dayGridMonth') {
                 titulo.prepend(nodo('span', 'ev-hora-inline', hora + ' '));
+                caja.appendChild(titulo);
+            } else if (tipo === 'timeGridDay') {
+                caja.classList.add('ev-dia');
+                var principal = document.createElement('div');
+                principal.className = 'ev-principal';
+                principal.appendChild(titulo);
+                principal.appendChild(nodo('div', 'ev-detalle', hora + ' · ' + p.atencion));
+                var meta = document.createElement('div');
+                meta.className = 'ev-meta';
+                meta.appendChild(nodo('span', 'ev-chip', '👤 ' + p.cliente));
+                meta.appendChild(nodo('span', 'ev-chip', '🩺 ' + p.profesional));
+                caja.appendChild(principal);
+                caja.appendChild(meta);
             } else {
+                caja.appendChild(titulo);
                 // En la Agenda la hora ya aparece en su propia columna.
-                var esLista = arg.view.type.indexOf('list') === 0;
+                var esLista = tipo.indexOf('list') === 0;
                 caja.appendChild(nodo('div', 'ev-detalle', esLista ? p.atencion : hora + ' · ' + p.atencion));
-                if (arg.view.type !== 'timeGridWeek') {
-                    caja.appendChild(nodo('div', 'ev-detalle', p.cliente + ' · ' + p.profesional));
-                }
+                if (esLista) caja.appendChild(nodo('div', 'ev-detalle', p.cliente + ' · ' + p.profesional));
             }
             return { domNodes: [caja] };
         },

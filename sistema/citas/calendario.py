@@ -1,6 +1,8 @@
 """Calendario de citas: vistas por día, semana y mes, y las acciones sobre cada cita."""
 
 import datetime
+import re
+from urllib.parse import quote
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
@@ -105,9 +107,9 @@ def detalle(request, pk):
                                     'veterinario', 'tipo_atencion', 'cancelada_por'), pk=pk)
     hoy = timezone.localdate()
 
-    nivel = puntaje = detalle_riesgo = None
+    nivel = puntaje = detalle_riesgo = accion = None
     if cita.estado == 'pendiente':
-        puntaje, nivel, _, detalle_riesgo = riesgo.puntuar(cita, riesgo.estadisticas())
+        puntaje, nivel, accion, detalle_riesgo = riesgo.puntuar(cita, riesgo.estadisticas())
 
     return render(request, 'citas/_detalle.html', {
         'cita': cita,
@@ -118,8 +120,28 @@ def detalle(request, pk):
         'nivel': nivel,
         'puntaje': puntaje,
         'detalle_riesgo': detalle_riesgo,
+        'accion': accion,
+        'whatsapp': _enlace_whatsapp(cita),
+        'duracion': cita.tipo_atencion.duracion_minutos,
         'form_cancelar': CancelarForm(),
     })
+
+
+def _enlace_whatsapp(cita):
+    """Enlace que abre WhatsApp con un recordatorio listo para enviar.
+
+    No usa ningún servicio pagado: wa.me abre el chat en el teléfono o en
+    WhatsApp Web, y quien atiende decide si lo envía.
+    """
+    digitos = re.sub(r'\D', '', cita.cliente.telefono or '')
+    if len(digitos) == 9:            # 9 1234 5678 -> se le agrega el 56 de Chile
+        digitos = '56' + digitos
+    if len(digitos) < 11:
+        return None
+    mensaje = (f'Hola {cita.cliente.nombres}, te escribimos de la clínica para recordarte '
+               f'la hora de {cita.mascota.nombre} el {cita.fecha:%d/%m} a las {cita.hora:%H:%M}. '
+               f'¿Nos confirmas tu asistencia?')
+    return f'https://wa.me/{digitos}?text={quote(mensaje)}'
 
 
 def _cita_pendiente(request, pk):
