@@ -1,21 +1,15 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-tema="oscuro">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="{% static 'img/favicon.svg' %}">
     <title>{% block titulo %}PreVet{% endblock %} · PreVet</title>
 
-    {% comment %}
-        Se aplica el tema guardado antes de pintar: si no, la página
-        parpadearía en claro durante un instante al recargar.
-    {% endcomment %}
     <script>
-        (function () {
-            var t = localStorage.getItem('tema');
-            if (t) document.documentElement.setAttribute('data-tema', t);
-        })();
+        // Todo PreVet usa la paleta del inicio de sesión (violeta oscuro).
+        document.documentElement.setAttribute('data-tema', 'oscuro');
     </script>
 
     <link rel="stylesheet" href="{% static 'css/prevet.css' %}">

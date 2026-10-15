@@ -50,44 +50,52 @@
     --radio: 0;
 }
 
+/* Paleta del inicio de sesión: violeta profundo, vidrio y lila.
+   Es la que usa todo PreVet (la página se marca siempre con data-tema="oscuro"). */
 [data-tema="oscuro"] {
     color-scheme: dark;
 
-    /* De noche el violeta sube de brillo y el texto encima se oscurece. */
     --acento: #a594f2;
     --acento-osc: #8b78e6;
-    --sobre-acento: #17122b;
-    --acento-bg: #241f3d;
-    --acento-bg2: #322b52;
+    --sobre-acento: #1a1338;
+    --acento-bg: rgba(165, 148, 242, .16);
+    --acento-bg2: rgba(165, 148, 242, .28);
 
-    --bg: #100e1a;
-    --card: #191626;
-    --sidebar: #141020;
-    --panel: #1e1a2e;
-    --hover: #241f36;
+    /* Fondo del login y superficies translúcidas, como su tarjeta de vidrio. */
+    --fondo-1: #1a1338;
+    --fondo-2: #2b2160;
+    --bg: #1a1338;
+    --card: rgba(255, 255, 255, .06);
+    --sidebar: rgba(18, 12, 44, .55);
+    --panel: rgba(255, 255, 255, .04);
+    --hover: rgba(255, 255, 255, .08);
+    /* Para lo que flota encima de todo (paneles, ventanas): sin transparencia. */
+    --solido: #221a4c;
 
-    --titulo: #ece9f5;
-    --texto: #d3cee3;
-    --gris: #948eab;
-    --gris-claro: #6a6480;
+    --titulo: #ffffff;
+    --texto: #e4dff7;
+    --gris: #b8b0dc;
+    --gris-claro: #8d85b8;
 
-    --borde: #2a2540;
-    --borde-suave: #211d33;
-    --borde-fuerte: #3c3557;
+    --borde: rgba(165, 148, 242, .22);
+    --borde-suave: rgba(165, 148, 242, .12);
+    --borde-fuerte: rgba(165, 148, 242, .38);
 
-    --ok-bg: #102c1f;    --ok-txt: #58d39a;   --ok-borde: #1e4d38;
-    --warn-bg: #2c2417;  --warn-txt: #e3b263; --warn-borde: #493c22;
-    --error-bg: #2e1c24;  --error-txt: #f094a4; --error-borde: #4d2f39;
-    --info-bg: #17223c;  --info-txt: #7fb0f0; --info-borde: #293b63;
-    --neutro-bg: #211d33; --neutro-txt: #a9a3bd;
+    --ok-bg: rgba(88, 211, 154, .14);   --ok-txt: #7fe0b4;   --ok-borde: rgba(88, 211, 154, .35);
+    --warn-bg: rgba(227, 178, 99, .15); --warn-txt: #f0c98a; --warn-borde: rgba(227, 178, 99, .35);
+    --error-bg: rgba(240, 148, 164, .14); --error-txt: #f6a9b6; --error-borde: rgba(240, 148, 164, .38);
+    --info-bg: rgba(127, 176, 240, .14); --info-txt: #a7c8f5; --info-borde: rgba(127, 176, 240, .35);
+    --neutro-bg: rgba(255, 255, 255, .07); --neutro-txt: #cfc8ea;
 
     --verde: #58d39a;
     --ambar: #e3b263;
     --rojo: #f094a4;
 
-    --tinte: linear-gradient(135deg, #262040 0%, #1e1932 100%);
-    --sombra-card: 0 1px 2px rgba(0, 0, 0, .45);
-    --sombra-acento: 0 4px 12px rgba(165, 148, 242, .18);
+    --tinte: linear-gradient(135deg, rgba(165, 148, 242, .22), rgba(107, 90, 212, .12));
+    --sombra-card: 0 10px 30px rgba(10, 6, 30, .35);
+    --sombra-acento: 0 6px 18px rgba(139, 120, 230, .35);
+
+    --radio: 12px;
 }
 
 html, body { height: 100%; }
@@ -137,7 +145,7 @@ a { color: inherit; text-decoration: none; }
     width: 40px;
     height: 40px;
     background: var(--acento);
-    border-radius: 0;
+    border-radius: var(--radio);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -164,7 +172,7 @@ a { color: inherit; text-decoration: none; }
     align-items: center;
     gap: .8rem;
     padding: .7rem .8rem;
-    border-radius: 0;
+    border-radius: var(--radio);
     color: var(--gris);
     font-size: .92rem;
     font-weight: 500;
@@ -198,7 +206,7 @@ a { color: inherit; text-decoration: none; }
 .sb-avatar {
     width: 36px;
     height: 36px;
-    border-radius: 0;
+    border-radius: var(--radio);
     background: var(--acento);
     color: var(--sobre-acento);
     display: flex;
@@ -389,7 +397,7 @@ a { color: inherit; text-decoration: none; }
     align-items: center;
     gap: .5rem;
     padding: .65rem 1.15rem;
-    border-radius: 0;
+    border-radius: var(--radio);
     border: none;
     font-family: inherit;
     font-size: .89rem;
@@ -419,7 +427,7 @@ a { color: inherit; text-decoration: none; }
 .card {
     background: var(--card);
     border: 1px solid var(--borde);
-    border-radius: 0;
+    border-radius: var(--radio);
     padding: 1.4rem 1.6rem;
     box-shadow: var(--sombra-card);
 }
@@ -463,7 +471,7 @@ a { color: inherit; text-decoration: none; }
 .metrica {
     background: var(--card);
     border: 1px solid var(--borde);
-    border-radius: 0;
+    border-radius: var(--radio);
     padding: 1.25rem 1.35rem;
     display: flex;
     align-items: center;
@@ -474,7 +482,7 @@ a { color: inherit; text-decoration: none; }
 .metrica-ico {
     width: 46px;
     height: 46px;
-    border-radius: 0;
+    border-radius: var(--radio);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -585,7 +593,7 @@ a { color: inherit; text-decoration: none; }
     color: var(--texto);
     font-size: .84rem;
     font-weight: 600;
-    border-radius: 0;
+    border-radius: var(--radio);
     transition: background .15s, border-color .15s;
 }
 .pag-btn:hover { background: var(--acento-bg); border-color: var(--borde-fuerte); }
@@ -644,7 +652,7 @@ table tbody tr:hover { background: var(--hover); }
 .avatar-mascota {
     width: 36px;
     height: 36px;
-    border-radius: 0;
+    border-radius: var(--radio);
     background: var(--acento-bg);
     display: flex;
     align-items: center;
@@ -662,7 +670,7 @@ table tbody tr:hover { background: var(--hover); }
     align-items: center;
     gap: .3rem;
     padding: .3rem .7rem;
-    border-radius: 0;
+    border-radius: var(--radio);
     font-size: .76rem;
     font-weight: 600;
     white-space: nowrap;
@@ -683,7 +691,7 @@ table tbody tr:hover { background: var(--hover); }
     align-items: center;
     gap: .3rem;
     padding: .38rem .7rem;
-    border-radius: 0;
+    border-radius: var(--radio);
     font-size: .8rem;
     font-weight: 600;
     color: var(--azul);
@@ -717,7 +725,7 @@ table tbody tr:hover { background: var(--hover); }
     width: 100%;
     padding: .75rem .9rem;
     border: 1.5px solid var(--borde);
-    border-radius: 0;
+    border-radius: var(--radio);
     font-size: .93rem;
     font-family: inherit;
     color: var(--texto);
@@ -750,7 +758,7 @@ table tbody tr:hover { background: var(--hover); }
 .vacio-ico {
     width: 62px;
     height: 62px;
-    border-radius: 0;
+    border-radius: var(--radio);
     background: var(--acento-bg);
     color: var(--gris-claro);
     display: flex;
@@ -769,7 +777,7 @@ table tbody tr:hover { background: var(--hover); }
     align-items: flex-start;
     gap: .7rem;
     padding: .9rem 1.1rem;
-    border-radius: 0;
+    border-radius: var(--radio);
     font-size: .89rem;
     margin-bottom: 1.1rem;
     border: 1px solid;
@@ -820,7 +828,7 @@ table tbody tr:hover { background: var(--hover); }
     top: .3rem;
     width: 14px;
     height: 14px;
-    border-radius: 0;
+    border-radius: var(--radio);
     background: var(--card);
     border: 3px solid var(--azul);
 }
@@ -840,7 +848,7 @@ table tbody tr:hover { background: var(--hover); }
     width: 100%;
     max-width: 54px;
     background: linear-gradient(180deg, var(--acento) 0%, var(--acento-osc) 100%);
-    border-radius: 0;
+    border-radius: var(--radio);
     min-height: 4px;
     transition: height .4s;
 }
@@ -861,8 +869,8 @@ table tbody tr:hover { background: var(--hover); }
 .hbarra-nom { font-weight: 600; color: var(--navy); display: flex; align-items: center; gap: .4rem; }
 .hbarra-num { color: var(--gris); font-size: .84rem; }
 
-.hbarra-pista { height: 9px; background: var(--borde); border-radius: 0; overflow: hidden; }
-.hbarra-fill { height: 100%; border-radius: 0; background: var(--azul); }
+.hbarra-pista { height: 9px; background: var(--borde); border-radius: var(--radio); overflow: hidden; }
+.hbarra-fill { height: 100%; border-radius: var(--radio); background: var(--azul); }
 .hbarra-fill.verde { background: var(--verde); }
 .hbarra-fill.ambar { background: var(--ambar); }
 .hbarra-fill.rojo  { background: var(--rojo); }
@@ -876,7 +884,7 @@ table tbody tr:hover { background: var(--hover); }
     display: inline-block;
     padding: .5rem .95rem;
     border: 1.5px solid var(--borde);
-    border-radius: 0;
+    border-radius: var(--radio);
     font-size: .87rem;
     color: var(--texto);
     cursor: pointer;
@@ -897,7 +905,7 @@ table tbody tr:hover { background: var(--hover); }
 /* --- resultado con puntaje --- */
 .resultado {
     border: 1px solid var(--borde);
-    border-radius: 0;
+    border-radius: var(--radio);
     padding: 1.1rem 1.25rem;
     margin-bottom: .9rem;
 }
@@ -914,7 +922,7 @@ table tbody tr:hover { background: var(--hover); }
 .mini-tag {
     font-size: .76rem;
     padding: .22rem .6rem;
-    border-radius: 0;
+    border-radius: var(--radio);
     background: var(--neutro-bg);
     color: var(--neutro-txt);
 }
@@ -933,7 +941,7 @@ table tbody tr:hover { background: var(--hover); }
     background: var(--error-bg);
     border: 1px solid var(--error-borde);
     color: var(--error-txt);
-    border-radius: 0;
+    border-radius: var(--radio);
     padding: .7rem .8rem;
     cursor: pointer;
     font-family: inherit;
@@ -975,7 +983,7 @@ table tbody tr:hover { background: var(--hover); }
 .tarjeta-animal {
     background: var(--card);
     border: 1px solid var(--borde);
-    border-radius: 0;
+    border-radius: var(--radio);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -1205,7 +1213,7 @@ table tbody tr:hover { background: var(--hover); }
 
 .fa-retrato {
     background: var(--tinte);
-    border-radius: 0;
+    border-radius: var(--radio);
     height: 210px;
     display: flex;
     align-items: center;
@@ -1365,19 +1373,21 @@ table tbody tr:hover { background: var(--hover); }
 @media (max-width: 700px) {
     .tabla-wrap { overflow: visible; margin: 0; }
 
-    table, thead, tbody, tr, td { display: block; width: 100%; }
-    thead { display: none; }
+    /* Solo las tablas de datos (dentro de .tabla-wrap): el calendario
+       también usa tablas y no debe convertirse en tarjetas. */
+    .tabla-wrap :is(table, thead, tbody, tr, td) { display: block; width: 100%; }
+    .tabla-wrap thead { display: none; }
 
-    tbody tr {
+    .tabla-wrap tbody tr {
         border: 1px solid var(--borde);
         background: var(--card);
         margin-bottom: .7rem;
         padding: .3rem 0;
     }
-    tbody tr:last-child { margin-bottom: 0; }
-    tbody tr:hover { background: var(--card); }
+    .tabla-wrap tbody tr:last-child { margin-bottom: 0; }
+    .tabla-wrap tbody tr:hover { background: var(--card); }
 
-    td {
+    .tabla-wrap td {
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -1388,7 +1398,7 @@ table tbody tr:hover { background: var(--hover); }
     }
 
     /* La etiqueta de la columna se dibuja delante del dato. */
-    td::before {
+    .tabla-wrap td::before {
         content: attr(data-label);
         font-size: .7rem;
         text-transform: uppercase;
@@ -1398,10 +1408,10 @@ table tbody tr:hover { background: var(--hover); }
         text-align: left;
         flex-shrink: 0;
     }
-    td:not([data-label])::before { content: none; }
+    .tabla-wrap td:not([data-label])::before { content: none; }
 
-    td .celda-mascota { justify-content: flex-end; }
-    td .acciones { justify-content: flex-end; flex-wrap: wrap; }
+    .tabla-wrap td .celda-mascota { justify-content: flex-end; }
+    .tabla-wrap td .acciones { justify-content: flex-end; flex-wrap: wrap; }
 
     /* En una sola columna conviene volver a la fila: ícono al lado
        del número, en vez de una tarjeta alta y vacía. */
@@ -1435,7 +1445,7 @@ table tbody tr:hover { background: var(--hover); }
 .sb-marca-logo, .bm-logo, .bm-boton, .visor-cerrar,
 .chip span, .bloque span, .dia-cupo, .paso, .alerta,
 .badge, .mini-tag, .hbarra-pista, .hbarra-fill, .gbarra-col, .tabla-wrap {
-    border-radius: 0;
+    border-radius: var(--radio);
 }
 
 @media (max-width: 1024px) {
@@ -1565,7 +1575,23 @@ table tbody tr:hover { background: var(--hover); }
     color: var(--texto);
     font-size: .88rem;
 }
-.cal-card .fc .fc-button { border-radius: 0; text-transform: capitalize; box-shadow: none !important; }
+.cal-card .fc .fc-button { border-radius: var(--radio); text-transform: capitalize; box-shadow: none !important; }
+/* Las tablas internas del calendario no deben heredar el estilo de las
+   tablas de datos de PreVet (márgenes, mayúsculas, fondo al pasar el mouse). */
+.cal-card .fc table { font-size: inherit; }
+.cal-card .fc th,
+.cal-card .fc td {
+    padding: 0;
+    text-transform: none;
+    letter-spacing: normal;
+    white-space: normal;
+    font-weight: inherit;
+    vertical-align: top;
+    background: transparent;
+    color: inherit;
+}
+.cal-card .fc .fc-col-header-cell { padding: .45rem 0; font-weight: 600; color: var(--gris); }
+.cal-card .fc tbody tr:hover { background: transparent; }
 .cal-card .fc .fc-button-active { color: var(--sobre-acento) !important; }
 .cal-card .fc .fc-toolbar-title { font-size: 1.15rem; color: var(--titulo); }
 .cal-card .fc .fc-toolbar-title::first-letter { text-transform: uppercase; }
@@ -1576,7 +1602,7 @@ table tbody tr:hover { background: var(--hover); }
     background: var(--panel); border: 1px solid var(--borde); padding: .3rem .7rem;
 }
 .cal-card .fc a { color: inherit; }
-.cal-card .fc-event { cursor: pointer; border-radius: 0; font-size: .8rem; }
+.cal-card .fc-event { cursor: pointer; border-radius: var(--radio); font-size: .8rem; }
 .cal-card .fc-event.estado-cancelada .fc-event-title { text-decoration: line-through; }
 .cal-card .fc-event.riesgo-alto { box-shadow: inset 4px 0 0 #f2b33d; }
 
@@ -1626,3 +1652,47 @@ table tbody tr:hover { background: var(--hover); }
 .det-cancelar { border-top: 1px solid var(--borde); padding-top: .9rem; }
 .det-cancelar summary { cursor: pointer; color: var(--error-txt); font-weight: 600; font-size: .88rem; }
 .det-cancelar form { display: flex; flex-direction: column; gap: .7rem; margin-top: .8rem; }
+
+
+/* ============ ESTILO DEL INICIO DE SESIÓN EN TODO PREVET ============ */
+[data-tema="oscuro"] body {
+    background:
+        radial-gradient(circle at 15% 20%, rgba(139, 120, 230, .30), transparent 40%),
+        radial-gradient(circle at 85% 80%, rgba(107, 90, 212, .26), transparent 45%),
+        linear-gradient(135deg, var(--fondo-1), var(--fondo-2));
+    background-attachment: fixed;
+}
+
+/* Vidrio: lo translúcido difumina lo que hay detrás, como en el login. */
+[data-tema="oscuro"] .card,
+[data-tema="oscuro"] .metrica,
+[data-tema="oscuro"] .tarjeta-animal,
+[data-tema="oscuro"] .sidebar,
+[data-tema="oscuro"] .topbar,
+[data-tema="oscuro"] .barra-movil {
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+[data-tema="oscuro"] .topbar { background: rgba(26, 19, 56, .55); }
+
+/* Lo que se abre encima de la página va opaco, para que se lea bien. */
+[data-tema="oscuro"] .modal,
+[data-tema="oscuro"] .panel-cita,
+[data-tema="oscuro"] .panel-cerrar,
+[data-tema="oscuro"] .cal-cargando { background: var(--solido); }
+
+/* Los menús desplegables nativos no aceptan transparencia. */
+[data-tema="oscuro"] select option { background: var(--solido); color: var(--texto); }
+
+/* El botón principal, igual al "Entrar" del login. */
+[data-tema="oscuro"] .btn-primario {
+    background: var(--acento);
+    color: var(--sobre-acento);
+    border-color: var(--acento);
+}
+[data-tema="oscuro"] .btn-primario:hover { background: #b7a9f7; }
+
+[data-tema="oscuro"] .badge { border-radius: 999px; }
+
+/* El estilo es uno solo: ya no hay cambio entre día y noche. */
+.btn-tema { display: none !important; }

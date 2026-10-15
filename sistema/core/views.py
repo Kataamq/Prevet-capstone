@@ -53,6 +53,8 @@ def inicio(request):
         'total_faltas': n_faltas,
         'tasa': round(tasa, 1),
         'perdido': perdido,
+        # Con punto de miles, como se escriben los pesos en Chile.
+        'perdido_txt': f"{perdido:,}".replace(',', '.'),
         'por_dia': por_dia,
         'proximas': Cita.objects.filter(fecha__gte=hoy, estado='pendiente')
                                 .select_related('mascota', 'veterinario', 'tipo_atencion')
