@@ -1556,6 +1556,16 @@ table tbody tr:hover { background: var(--hover); }
 .opcion-mascota:has(input:checked) { border-color: var(--acento); background: var(--acento-bg); }
 
 /* --- calendario --- */
+/* Color de cada estado. En modo noche, tonos claros; en modo día, más intensos. */
+.ev-pendiente  { --ev: #6b5ad4; }
+.ev-completada { --ev: #17945f; }
+.ev-no_asistio { --ev: #d94a5e; }
+.ev-cancelada  { --ev: #9a94b8; }
+[data-tema="oscuro"] .ev-pendiente  { --ev: #a594f2; }
+[data-tema="oscuro"] .ev-completada { --ev: #58d39a; }
+[data-tema="oscuro"] .ev-no_asistio { --ev: #f094a4; }
+[data-tema="oscuro"] .ev-cancelada  { --ev: #8d85b8; }
+
 .cal-barra {
     display: flex;
     align-items: flex-end;
@@ -1564,28 +1574,122 @@ table tbody tr:hover { background: var(--hover); }
     flex-wrap: wrap;
     margin-bottom: 1rem;
 }
-.cal-leyenda { display: flex; flex-wrap: wrap; gap: .9rem; font-size: .82rem; color: var(--gris); }
-.cal-leyenda i { display: inline-block; width: 11px; height: 11px; margin-right: .3rem; vertical-align: -1px; }
-.cal-card { padding: 1rem; }
+.cal-leyenda { display: flex; flex-wrap: wrap; gap: .5rem; }
+.ley {
+    font-size: .78rem;
+    font-weight: 600;
+    color: var(--texto);
+    padding: .3rem .7rem .3rem .55rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--ev, #f0c98a) 18%, transparent);
+    border-left: 4px solid var(--ev, #f0c98a);
+}
+.ley-riesgo { --ev: #e3a73d; }
+.cal-card { position: relative; padding: 1.2rem 1.2rem 1.4rem; }
+.cal-cargando {
+    position: absolute; top: 1.2rem; left: 50%; transform: translateX(-50%);
+    font-size: .8rem; color: var(--gris);
+    border: 1px solid var(--borde); padding: .3rem .8rem; border-radius: 999px;
+    z-index: 5;
+}
 
-/* FullCalendar con los colores de PreVet (también de noche). */
+/* FullCalendar con los colores de PreVet. */
 .cal-card .fc {
-    --fc-border-color: var(--borde);
-    --fc-page-bg-color: var(--card);
+    --fc-border-color: var(--borde-suave);
+    --fc-page-bg-color: transparent;
     --fc-neutral-bg-color: var(--panel);
     --fc-today-bg-color: var(--acento-bg);
-    --fc-now-indicator-color: var(--rojo);
+    --fc-now-indicator-color: #e3a73d;
+    --fc-list-event-hover-bg-color: var(--hover);
     --fc-button-bg-color: var(--card);
-    --fc-button-border-color: var(--borde-fuerte);
+    --fc-button-border-color: var(--borde);
     --fc-button-text-color: var(--texto);
     --fc-button-hover-bg-color: var(--hover);
     --fc-button-hover-border-color: var(--borde-fuerte);
     --fc-button-active-bg-color: var(--acento);
     --fc-button-active-border-color: var(--acento);
     color: var(--texto);
-    font-size: .88rem;
+    font-size: .86rem;
 }
-.cal-card .fc .fc-button { border-radius: var(--radio); text-transform: capitalize; box-shadow: none !important; }
+.cal-card .fc a { color: inherit; text-decoration: none; }
+
+/* Barra superior: título a la izquierda, botones tipo píldora a la derecha. */
+.cal-card .fc .fc-toolbar { flex-wrap: wrap; gap: .8rem; margin-bottom: 1.2rem; }
+.cal-card .fc .fc-toolbar-title { font-size: 1.3rem; font-weight: 700; color: var(--titulo); }
+.cal-card .fc .fc-toolbar-title::first-letter { text-transform: uppercase; }
+.cal-card .fc .fc-toolbar-chunk:last-child { display: flex; flex-wrap: wrap; gap: .5rem; }
+.cal-card .fc .fc-button {
+    border-radius: 999px;
+    padding: .42rem .9rem;
+    font-size: .82rem;
+    font-weight: 600;
+    text-transform: none;
+    box-shadow: none !important;
+}
+.cal-card .fc .fc-button-group > .fc-button { border-radius: 0; }
+.cal-card .fc .fc-button-group > .fc-button:first-child { border-radius: 999px 0 0 999px; }
+.cal-card .fc .fc-button-group > .fc-button:last-child { border-radius: 0 999px 999px 0; }
+.cal-card .fc .fc-button-active,
+.cal-card .fc .fc-button-active:hover { color: var(--sobre-acento) !important; }
+.cal-card .fc .fc-today-button:disabled { opacity: .45; }
+
+/* La grilla: contenedor redondeado y líneas suaves. */
+.cal-card .fc .fc-scrollgrid { border-radius: var(--radio); overflow: hidden; border-color: var(--borde); }
+.cal-card .fc .fc-timegrid-slot { height: 2.4rem; }
+.cal-card .fc .fc-timegrid-slot-minor { border-top-style: dashed; }
+.cal-card .fc .fc-timegrid-slot-label-cushion,
+.cal-card .fc .fc-timegrid-axis-cushion { font-size: .74rem; color: var(--gris); }
+.cal-card .fc .fc-col-header-cell { padding: .55rem 0; background: var(--panel); }
+.cal-card .fc .fc-col-header-cell-cushion { color: var(--gris); font-weight: 600; text-transform: capitalize; }
+.cab-dia { display: flex; flex-direction: column; align-items: center; gap: .2rem; }
+.cab-nombre { font-size: .72rem; text-transform: uppercase; letter-spacing: .6px; color: var(--gris); }
+.cab-numero {
+    display: grid; place-items: center;
+    width: 2rem; height: 2rem; border-radius: 50%;
+    font-size: 1.05rem; font-weight: 700; color: var(--titulo);
+}
+.cab-numero.hoy { background: var(--acento); color: var(--sobre-acento); }
+.cal-card .fc .fc-daygrid-day-number { font-weight: 600; color: var(--gris); padding: .4rem .55rem; }
+.cal-card .fc .fc-day-today .fc-daygrid-day-number {
+    background: var(--acento); color: var(--sobre-acento); border-radius: 999px; margin: .25rem;
+    min-width: 1.8rem; text-align: center;
+}
+
+/* Cada cita: fondo suave del color de su estado y una barra a la izquierda. */
+.cal-card .fc .fc-event {
+    cursor: pointer;
+    border: none;
+    border-left: 4px solid var(--ev);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--ev) 22%, var(--solido));
+    color: var(--titulo);
+    box-shadow: 0 2px 8px rgba(10, 6, 30, .12);
+    transition: transform .12s, box-shadow .12s;
+}
+.cal-card .fc .fc-event:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(10, 6, 30, .2); }
+.cal-card .fc .fc-event .fc-event-main { color: inherit; padding: .2rem .4rem; }
+.ev-caja { line-height: 1.25; overflow: hidden; }
+.ev-titulo { font-weight: 700; font-size: .8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ev-detalle { font-size: .72rem; color: var(--gris); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ev-hora-inline { font-weight: 600; color: var(--gris); }
+.ev-alerta { color: #e3a73d; }
+.cal-card .fc .fc-event.ev-cancelada .ev-titulo { text-decoration: line-through; opacity: .75; }
+.cal-card .fc .fc-event.riesgo-alto { box-shadow: 0 0 0 1.5px #e3a73d, 0 2px 8px rgba(10, 6, 30, .12); }
+
+/* Vista de mes: las citas como chips en una línea. */
+.cal-card .fc .fc-daygrid-event { margin: 2px 4px; padding: 1px 2px; }
+.cal-card .fc .fc-daygrid-more-link { color: var(--acento); font-weight: 600; font-size: .78rem; }
+.cal-card .fc .fc-popover { background: var(--solido); border-radius: var(--radio); border-color: var(--borde); }
+
+/* Vista Agenda: una lista ordenada, ideal para el celular. */
+.cal-card .fc .fc-list { border-radius: var(--radio); overflow: hidden; border-color: var(--borde); }
+.cal-card .fc .fc-list-day-cushion { background: var(--panel); }
+.cal-card .fc .fc-list-day-text, .cal-card .fc .fc-list-day-side-text { color: var(--titulo); font-weight: 700; text-transform: capitalize; }
+.cal-card .fc .fc-list-event { background: transparent; box-shadow: none; border-left: none; }
+.cal-card .fc .fc-list-event:hover td { background: var(--hover); }
+.cal-card .fc .fc-list-event-dot { border-color: var(--ev); }
+.cal-card .fc .fc-list-event-time { color: var(--gris); white-space: nowrap; width: 1%; }
+
 /* Las tablas internas del calendario no deben heredar el estilo de las
    tablas de datos de PreVet (márgenes, mayúsculas, fondo al pasar el mouse). */
 .cal-card .fc table { font-size: inherit; }
@@ -1600,30 +1704,13 @@ table tbody tr:hover { background: var(--hover); }
     background: transparent;
     color: inherit;
 }
-.cal-card .fc .fc-col-header-cell { padding: .45rem 0; font-weight: 600; color: var(--gris); }
+.cal-card .fc .fc-list-event td { padding: .7rem 1rem; }
 .cal-card .fc tbody tr:hover { background: transparent; }
-.cal-card .fc .fc-button-active { color: var(--sobre-acento) !important; }
-.cal-card .fc .fc-toolbar-title { font-size: 1.15rem; color: var(--titulo); }
-.cal-card .fc .fc-toolbar-title::first-letter { text-transform: uppercase; }
-.cal-card { position: relative; }
-.cal-cargando {
-    position: absolute; top: 1rem; right: 1rem;
-    font-size: .8rem; color: var(--gris);
-    background: var(--panel); border: 1px solid var(--borde); padding: .3rem .7rem;
-}
-.cal-card .fc a { color: inherit; }
-.cal-card .fc-event { cursor: pointer; border-radius: 8px; font-size: .8rem; font-weight: 600; }
-.cal-card .fc-event.estado-cancelada { opacity: .7; }
-/* En la vista de mes las citas son un punto y un texto: el texto va claro. */
-.cal-card .fc-daygrid-dot-event { color: var(--texto); }
-.cal-card .fc-daygrid-dot-event:hover { background: var(--hover); }
-.cal-card .fc-timegrid-now-indicator-line { border-color: #f0c98a; }
-.cal-card .fc-timegrid-now-indicator-arrow { border-color: #f0c98a; border-top-color: transparent; border-bottom-color: transparent; }
-.cal-card .fc-event.estado-cancelada .fc-event-title { text-decoration: line-through; }
-.cal-card .fc-event.riesgo-alto { box-shadow: inset 4px 0 0 #f0c98a, 0 0 0 1px #f0c98a; }
 
-@media (max-width: 640px) {
-    .cal-card .fc .fc-toolbar { flex-direction: column; gap: .6rem; }
+@media (max-width: 700px) {
+    .cal-card { padding: .8rem; }
+    .cal-card .fc .fc-toolbar { flex-direction: column; align-items: flex-start; }
+    .cal-card .fc .fc-toolbar-title { font-size: 1.1rem; }
 }
 
 /* --- panel lateral con el detalle de una cita --- */

@@ -15,15 +15,8 @@ from . import riesgo
 from .forms import CancelarForm, ReagendarForm
 from .models import Cita
 
-# Color de cada cita en el calendario según su estado, en tonos de la
-# paleta del inicio de sesión. El texto va oscuro para que se lea encima.
-COLORES = {
-    'pendiente': '#a594f2',
-    'completada': '#7fe0b4',
-    'cancelada': '#8d85b8',
-    'no_asistio': '#f6a9b6',
-}
-COLOR_TEXTO = '#1a1338'
+# Los colores de cada estado están en prevet.css (clases ev-<estado>),
+# para que cambien junto con el modo día o noche.
 
 
 def _veterinarios():
@@ -53,8 +46,7 @@ def calendario(request):
         'veterinarios': _veterinarios(),
         'vet_elegido': request.GET.get('veterinario', por_defecto),
         'fecha_inicial': request.GET.get('fecha', ''),
-        'vista_inicial': request.GET.get('vista', 'timeGridWeek'),
-        'colores': COLORES,
+        'vista_inicial': request.GET.get('vista', ''),
     })
 
 
@@ -90,10 +82,11 @@ def eventos(request):
             'title': f'{alerta}{c.mascota.especie.emoji} {c.mascota.nombre} · {c.tipo_atencion.nombre}',
             'start': datetime.datetime.combine(c.fecha, c.hora).isoformat(),
             'end': datetime.datetime.combine(c.fecha, c.hora_termino).isoformat(),
-            'color': COLORES.get(c.estado),
-            'textColor': COLOR_TEXTO,
-            'classNames': [f'estado-{c.estado}'] + (['riesgo-alto'] if nivel == 'alto' else []),
+            'classNames': [f'ev-{c.estado}'] + (['riesgo-alto'] if nivel == 'alto' else []),
             'extendedProps': {
+                'mascota': c.mascota.nombre,
+                'emoji': c.mascota.especie.emoji,
+                'atencion': c.tipo_atencion.nombre,
                 'cliente': c.cliente.nombre_completo,
                 'profesional': c.veterinario.get_full_name(),
                 'estado': c.get_estado_display(),

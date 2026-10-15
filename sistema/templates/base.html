@@ -1,4 +1,4 @@
-{% load static %}
+{% load static estaticos %}
 <!DOCTYPE html>
 <html lang="es" data-tema="oscuro">
 <head>
@@ -20,7 +20,7 @@
         })();
     </script>
 
-    <link rel="stylesheet" href="{% static 'css/prevet.css' %}">
+    <link rel="stylesheet" href="{% static_v 'css/prevet.css' %}">
 </head>
 <body>
 
@@ -238,7 +238,7 @@
 </div>
 {% endif %}
 
-<script src="{% static 'js/prevet.js' %}"></script>
+<script src="{% static_v 'js/prevet.js' %}"></script>
 
 </body>
 </html>

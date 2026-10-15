@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static estaticos %}
 
 {% block titulo %}Calendario{% endblock %}
 {% block encabezado %}Calendario{% endblock %}
@@ -27,11 +27,11 @@
     </div>
 
     <div class="cal-leyenda">
-        <span><i style="background:{{ colores.pendiente }}"></i> Pendiente</span>
-        <span><i style="background:{{ colores.completada }}"></i> Atendida</span>
-        <span><i style="background:{{ colores.no_asistio }}"></i> No asistió</span>
-        <span><i style="background:{{ colores.cancelada }}"></i> Cancelada</span>
-        <span>⚠ Riesgo alto</span>
+        <span class="ley ev-pendiente">Pendiente</span>
+        <span class="ley ev-completada">Atendida</span>
+        <span class="ley ev-no_asistio">No asistió</span>
+        <span class="ley ev-cancelada">Cancelada</span>
+        <span class="ley ley-riesgo">Riesgo alto</span>
     </div>
 </div>
 
@@ -54,6 +54,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.15/locales/es.global.min.js"></script>
-<script src="{% static 'js/calendario.js' %}"></script>
+<script src="{% static_v 'js/calendario.js' %}"></script>
 
 {% endblock %}

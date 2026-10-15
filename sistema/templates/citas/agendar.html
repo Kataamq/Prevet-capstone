@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static estaticos %}
 
 {% block titulo %}Agendar hora{% endblock %}
 {% block encabezado %}Agendar hora{% endblock %}
@@ -144,7 +144,7 @@
     </div>
 </form>
 
-<script src="{% static 'js/agendar.js' %}"></script>
+<script src="{% static_v 'js/agendar.js' %}"></script>
 {% endif %}
 
 {% endblock %}

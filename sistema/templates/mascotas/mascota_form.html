@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static estaticos %}
 
 {% block titulo %}Nueva mascota{% endblock %}
 {% block encabezado %}Nueva mascota{% endblock %}
@@ -39,6 +39,6 @@
 
 {# Qué raza pertenece a qué tipo, para que el navegador filtre la lista. #}
 {{ form.razas_por_tipo|json_script:"razas-por-tipo" }}
-<script src="{% static 'js/mascota_form.js' %}"></script>
+<script src="{% static_v 'js/mascota_form.js' %}"></script>
 
 {% endblock %}
