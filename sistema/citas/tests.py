@@ -207,7 +207,8 @@ class VistasCitasTest(BaseCitas):
         self.assertEqual(conteos['cancelada'], 0)
 
     def test_marcar_no_asistio_cambia_el_estado(self):
-        cita = self.crear_cita(estado='pendiente')
+        # Solo se puede faltar a una cita que ya ocurrió: se usa una de ayer.
+        cita = self.crear_cita(estado='pendiente', dias=-1)
         self.client.post(f'/citas/{cita.pk}/no-asistio/')
         cita.refresh_from_db()
 
@@ -378,3 +379,130 @@ class RegistrarClienteYMascotaTest(TestCase):
             'fecha_nacimiento': '', 'relacion': 'dueno'})
         self.assertContains(respuesta, 'no es una raza de felino')
         self.assertFalse(Mascota.objects.filter(nombre='Michi').exists())
+
+
+class CalendarioTest(TestCase):
+    """El calendario y lo que se puede hacer con cada cita desde él."""
+
+    CLAVE = 'Huellitas.2026!'
+
+    def setUp(self):
+        from django.contrib.auth.models import Group
+        from usuarios.models import Perfil
+        from .models import HorarioAtencion
+
+        self.vet = User.objects.create_user('vet', first_name='Paz', last_name='Herrera')
+        Perfil.objects.create(usuario=self.vet, rol='veterinario')
+        self.otro_vet = User.objects.create_user('vet2', first_name='Luis', last_name='Contreras')
+        Perfil.objects.create(usuario=self.otro_vet, rol='veterinario')
+        for v in (self.vet, self.otro_vet):
+            for dia in range(7):
+                HorarioAtencion.objects.create(veterinario=v, dia_semana=dia,
+                                               hora_inicio='09:00', hora_fin='13:00')
+
+        self.recepcion = User.objects.create_user('recepcion', password=self.CLAVE)
+        self.recepcion.groups.add(Group.objects.get(name='Recepción'))
+
+        canino = Especie.objects.create(nombre='Perro')
+        self.ana = Cliente.objects.create(rut='15234871-1', nombres='Ana', apellidos='Soto')
+        self.bruno = Mascota.objects.create(nombre='Bruno', especie=canino, sexo='macho')
+        Tenencia.objects.create(cliente=self.ana, mascota=self.bruno, es_principal=True)
+        self.control = TipoAtencion.objects.create(nombre='Control', duracion_minutos=30, precio=20000)
+
+        self.hoy = timezone.localdate()
+        self.manana = self.hoy + timedelta(days=1)
+        self.client.login(username='recepcion', password=self.CLAVE)
+
+    def cita(self, dias=1, hora='10:00', vet=None, estado='pendiente'):
+        return Cita.objects.create(
+            veterinario=vet or self.vet, mascota=self.bruno, cliente=self.ana,
+            tipo_atencion=self.control, fecha=self.hoy + timedelta(days=dias),
+            hora=hora, estado=estado)
+
+    def eventos(self, **params):
+        desde = self.hoy - timedelta(days=3)
+        hasta = self.hoy + timedelta(days=7)
+        query = {'start': desde.isoformat(), 'end': hasta.isoformat(), **params}
+        return self.client.get('/citas/calendario/eventos/', query).json()
+
+    def test_la_pagina_carga(self):
+        self.assertContains(self.client.get('/citas/calendario/'), 'id="calendario"')
+
+    def test_entrega_las_citas_con_inicio_y_termino(self):
+        self.cita()
+        evento = self.eventos()[0]
+        self.assertTrue(evento['start'].endswith('10:00:00'))
+        self.assertTrue(evento['end'].endswith('10:30:00'))   # dura 30 minutos
+        self.assertIn('Bruno', evento['title'])
+
+    def test_filtra_por_profesional(self):
+        self.cita(vet=self.vet)
+        self.cita(vet=self.otro_vet, hora='11:00')
+        self.assertEqual(len(self.eventos(veterinario=self.otro_vet.pk)), 1)
+
+    def test_rango_invalido(self):
+        respuesta = self.client.get('/citas/calendario/eventos/', {'start': 'x', 'end': 'y'})
+        self.assertEqual(respuesta.status_code, 400)
+
+    def test_el_detalle_muestra_al_cliente_y_el_riesgo(self):
+        c = self.cita()
+        respuesta = self.client.get(f'/citas/{c.pk}/detalle/')
+        self.assertContains(respuesta, 'Ana Soto')
+        self.assertContains(respuesta, 'Riesgo')
+
+    def test_cancelar_guarda_motivo_y_libera_la_hora(self):
+        c = self.cita()
+        self.client.post(f'/citas/{c.pk}/cancelar/', {'motivo': 'Otro', 'detalle': 'Viaje'})
+        c.refresh_from_db()
+        self.assertEqual(c.estado, 'cancelada')
+        self.assertEqual(c.motivo_cancelacion, 'Otro: Viaje')
+        self.assertEqual(c.cancelada_por, self.recepcion)
+        # El mismo bloque ya se puede volver a ocupar.
+        self.cita()
+        self.assertEqual(Cita.objects.filter(fecha=self.manana, hora='10:00').count(), 2)
+
+    def test_cancelar_sin_motivo_no_hace_nada(self):
+        c = self.cita()
+        self.client.post(f'/citas/{c.pk}/cancelar/', {'motivo': ''})
+        c.refresh_from_db()
+        self.assertEqual(c.estado, 'pendiente')
+
+    def test_reagendar_respeta_el_horario_y_las_horas_tomadas(self):
+        c = self.cita()
+        self.cita(hora='11:00')
+        fuera = self.client.post(f'/citas/{c.pk}/reagendar/', {
+            'veterinario': self.vet.pk, 'fecha': self.manana.isoformat(), 'hora': '15:00'})
+        self.assertContains(fuera, 'atiende ese día')
+        tomada = self.client.post(f'/citas/{c.pk}/reagendar/', {
+            'veterinario': self.vet.pk, 'fecha': self.manana.isoformat(), 'hora': '11:00'})
+        self.assertContains(tomada, 'ya está tomada')
+        self.client.post(f'/citas/{c.pk}/reagendar/', {
+            'veterinario': self.otro_vet.pk, 'fecha': self.manana.isoformat(), 'hora': '12:00'})
+        c.refresh_from_db()
+        self.assertEqual((c.veterinario, c.hora.strftime('%H:%M')), (self.otro_vet, '12:00'))
+
+    def test_atendida_y_llegada(self):
+        c = self.cita(dias=0)
+        self.client.post(f'/citas/{c.pk}/llego/')
+        self.client.post(f'/citas/{c.pk}/atendida/')
+        c.refresh_from_db()
+        self.assertIsNotNone(c.hora_llegada)
+        self.assertEqual(c.estado, 'completada')
+
+    def test_no_se_atiende_una_cita_futura(self):
+        c = self.cita(dias=3)
+        self.client.post(f'/citas/{c.pk}/atendida/')
+        c.refresh_from_db()
+        self.assertEqual(c.estado, 'pendiente')
+
+    def test_una_cita_cancelada_no_se_marca_como_inasistencia(self):
+        c = self.cita(dias=0, estado='cancelada')
+        self.client.post(f'/citas/{c.pk}/no-asistio/')
+        c.refresh_from_db()
+        self.assertEqual(c.estado, 'cancelada')
+
+    def test_las_acciones_exigen_poder_modificar_citas(self):
+        c = self.cita()
+        User.objects.create_user('mirón', password=self.CLAVE)
+        self.client.login(username='mirón', password=self.CLAVE)
+        self.assertEqual(self.client.post(f'/citas/{c.pk}/cancelar/', {'motivo': 'Otro'}).status_code, 403)

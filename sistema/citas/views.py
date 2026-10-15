@@ -57,6 +57,11 @@ def marcar_no_asistio(request, pk):
         return redirect('citas')
 
     cita = get_object_or_404(Cita, pk=pk)
+    volver = request.META.get('HTTP_REFERER', '/citas/')
+    if cita.estado != 'pendiente' or cita.fecha > timezone.localdate():
+        messages.error(request, 'Solo se puede marcar la inasistencia de una cita pendiente de hoy o de antes.')
+        return redirect(volver)
+
     cita.estado = 'no_asistio'
     cita.fecha_marcada_no_asistio = timezone.now()
     cita.save()
@@ -66,7 +71,7 @@ def marcar_no_asistio(request, pk):
         f'{cita.mascota.nombre} quedó registrada como inasistencia. '
         f'Se perdieron ${cita.tipo_atencion.precio:,}'.replace(',', '.')
     )
-    return redirect(request.META.get('HTTP_REFERER', '/citas/'))
+    return redirect(volver)
 
 @login_required
 @permission_required('citas.add_cita', raise_exception=True)

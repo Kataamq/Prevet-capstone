@@ -1534,3 +1534,95 @@ table tbody tr:hover { background: var(--hover); }
 .opcion-mascota strong { display: block; color: var(--titulo); }
 .opcion-mascota small { display: block; color: var(--gris); font-size: .8rem; margin-top: .15rem; }
 .opcion-mascota:has(input:checked) { border-color: var(--acento); background: var(--acento-bg); }
+
+/* --- calendario --- */
+.cal-barra {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+.cal-leyenda { display: flex; flex-wrap: wrap; gap: .9rem; font-size: .82rem; color: var(--gris); }
+.cal-leyenda i { display: inline-block; width: 11px; height: 11px; margin-right: .3rem; vertical-align: -1px; }
+.cal-card { padding: 1rem; }
+
+/* FullCalendar con los colores de PreVet (también de noche). */
+.cal-card .fc {
+    --fc-border-color: var(--borde);
+    --fc-page-bg-color: var(--card);
+    --fc-neutral-bg-color: var(--panel);
+    --fc-today-bg-color: var(--acento-bg);
+    --fc-now-indicator-color: var(--rojo);
+    --fc-button-bg-color: var(--card);
+    --fc-button-border-color: var(--borde-fuerte);
+    --fc-button-text-color: var(--texto);
+    --fc-button-hover-bg-color: var(--hover);
+    --fc-button-hover-border-color: var(--borde-fuerte);
+    --fc-button-active-bg-color: var(--acento);
+    --fc-button-active-border-color: var(--acento);
+    color: var(--texto);
+    font-size: .88rem;
+}
+.cal-card .fc .fc-button { border-radius: 0; text-transform: capitalize; box-shadow: none !important; }
+.cal-card .fc .fc-button-active { color: var(--sobre-acento) !important; }
+.cal-card .fc .fc-toolbar-title { font-size: 1.15rem; color: var(--titulo); }
+.cal-card .fc .fc-toolbar-title::first-letter { text-transform: uppercase; }
+.cal-card { position: relative; }
+.cal-cargando {
+    position: absolute; top: 1rem; right: 1rem;
+    font-size: .8rem; color: var(--gris);
+    background: var(--panel); border: 1px solid var(--borde); padding: .3rem .7rem;
+}
+.cal-card .fc a { color: inherit; }
+.cal-card .fc-event { cursor: pointer; border-radius: 0; font-size: .8rem; }
+.cal-card .fc-event.estado-cancelada .fc-event-title { text-decoration: line-through; }
+.cal-card .fc-event.riesgo-alto { box-shadow: inset 4px 0 0 #f2b33d; }
+
+@media (max-width: 640px) {
+    .cal-card .fc .fc-toolbar { flex-direction: column; gap: .6rem; }
+}
+
+/* --- panel lateral con el detalle de una cita --- */
+.panel-fondo { position: fixed; inset: 0; background: rgba(20, 16, 40, .35); z-index: 90; }
+.panel-cita {
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    width: min(420px, 100vw);
+    background: var(--card);
+    border-left: 1px solid var(--borde);
+    box-shadow: -10px 0 30px rgba(20, 16, 40, .18);
+    padding: 1.6rem 1.4rem;
+    overflow-y: auto;
+    z-index: 91;
+    transform: translateX(100%);
+    transition: transform .22s ease;
+}
+.panel-cita.abierto { transform: translateX(0); }
+.panel-cerrar {
+    position: absolute; top: .9rem; right: .9rem;
+    width: 34px; height: 34px;
+    border: 1px solid var(--borde); background: var(--card); cursor: pointer;
+    display: grid; place-items: center;
+}
+.panel-cerrar svg { width: 18px; height: 18px; fill: var(--gris); }
+
+.det-cabecera { display: flex; align-items: center; gap: .8rem; margin-bottom: .9rem; padding-right: 2.5rem; }
+.det-emoji { font-size: 2rem; }
+.det-cabecera h3 { color: var(--titulo); font-size: 1.25rem; }
+.det-sub { color: var(--gris); font-size: .85rem; }
+
+.det-datos { display: grid; grid-template-columns: 95px 1fr; gap: .45rem .8rem; margin: 1.1rem 0; font-size: .88rem; }
+.det-datos dt { color: var(--gris); }
+.det-datos dd { color: var(--texto); }
+
+.det-riesgo { background: var(--panel); border: 1px solid var(--borde); padding: .8rem 1rem; font-size: .84rem; margin-bottom: 1rem; }
+.det-riesgo ul { margin: .4rem 0 0 1.1rem; color: var(--gris); }
+
+.det-acciones { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: 1rem; }
+.det-acciones form { display: inline; }
+
+.det-cancelar { border-top: 1px solid var(--borde); padding-top: .9rem; }
+.det-cancelar summary { cursor: pointer; color: var(--error-txt); font-weight: 600; font-size: .88rem; }
+.det-cancelar form { display: flex; flex-direction: column; gap: .7rem; margin-top: .8rem; }

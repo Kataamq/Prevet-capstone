@@ -81,8 +81,11 @@
                 <svg class="icono"><use href="#i-inicio"/></svg> Inicio
             </a>
             {% if perms.citas.view_cita %}
+            <a href="/citas/calendario/" class="sb-link {% if seccion == 'calendario' %}activo{% endif %}">
+                <svg class="icono"><use href="#i-calendario"/></svg> Calendario
+            </a>
             <a href="/citas/" class="sb-link {% if seccion == 'citas' %}activo{% endif %}">
-                <svg class="icono"><use href="#i-calendario"/></svg> Citas
+                <svg class="icono"><use href="#i-lista"/></svg> Citas
             </a>
             {% endif %}
             {% if perms.mascotas.view_mascota %}

@@ -1,0 +1,80 @@
+{# Detalle de una cita, para el panel lateral del calendario. #}
+<div class="det-cabecera">
+    <span class="det-emoji">{{ cita.mascota.especie.emoji }}</span>
+    <div>
+        <h3>{{ cita.mascota.nombre }}</h3>
+        <div class="det-sub">
+            {{ cita.mascota.especie.nombre }}{% if cita.mascota.raza %} · {{ cita.mascota.raza.nombre }}{% endif %}
+            {% if cita.mascota.edad %} · {{ cita.mascota.edad }}{% endif %}
+        </div>
+    </div>
+</div>
+
+<span class="badge badge-{% if cita.estado == 'no_asistio' %}no-asistio{% else %}{{ cita.estado }}{% endif %}">
+    {{ cita.get_estado_display }}
+</span>
+{% if nivel %}
+<span class="badge {% if nivel == 'alto' %}badge-no-asistio{% elif nivel == 'medio' %}badge-pendiente{% else %}badge-completada{% endif %}">
+    Riesgo {{ nivel }} · {{ puntaje }}/100
+</span>
+{% endif %}
+
+<dl class="det-datos">
+    <dt>Fecha</dt><dd>{{ cita.fecha|date:"l d/m/Y" }}, {{ cita.hora|time:"H:i" }} a {{ cita.hora_termino|time:"H:i" }}</dd>
+    <dt>Atención</dt><dd>{{ cita.tipo_atencion.nombre }}</dd>
+    <dt>Profesional</dt><dd>{{ cita.veterinario.get_full_name }}</dd>
+    <dt>Cliente</dt><dd>{{ cita.cliente.nombre_completo }} · RUT {{ cita.cliente.rut_formateado }}</dd>
+    {% if cita.cliente.telefono %}<dt>Teléfono</dt><dd>{{ cita.cliente.telefono }}</dd>{% endif %}
+    {% if cita.notas %}<dt>Motivo</dt><dd>{{ cita.notas }}</dd>{% endif %}
+    {% if cita.hora_llegada %}<dt>Llegó</dt><dd>{{ cita.hora_llegada|time:"H:i" }}</dd>{% endif %}
+    {% if cita.estado == 'cancelada' %}
+    <dt>Cancelada</dt>
+    <dd>{{ cita.motivo_cancelacion|default:"Sin motivo registrado" }}{% if cita.cancelada_por %} · por {{ cita.cancelada_por.get_full_name|default:cita.cancelada_por.username }}{% endif %}</dd>
+    {% endif %}
+</dl>
+
+{% if detalle_riesgo %}
+<div class="det-riesgo">
+    <strong>Por qué este nivel de riesgo</strong>
+    <ul>{% for d in detalle_riesgo %}<li>{{ d }}</li>{% endfor %}</ul>
+</div>
+{% endif %}
+
+{% if pendiente and perms.citas.change_cita %}
+<div class="det-acciones">
+    {% if es_hoy and not cita.hora_llegada %}
+    <form method="post" action="{% url 'cita_llego' cita.pk %}">
+        {% csrf_token %}<input type="hidden" name="next" class="volver-aqui">
+        <button type="submit" class="btn btn-suave">✋ Llegó</button>
+    </form>
+    {% endif %}
+
+    {% if ya_ocurrio %}
+    <form method="post" action="{% url 'cita_atendida' cita.pk %}">
+        {% csrf_token %}<input type="hidden" name="next" class="volver-aqui">
+        <button type="submit" class="btn btn-primario">
+            <svg class="icono-sm"><use href="#i-check"/></svg> Marcar como atendida
+        </button>
+    </form>
+    <form method="post" action="{% url 'marcar_no_asistio' cita.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-peligro">No asistió</button>
+    </form>
+    {% endif %}
+
+    <a href="{% url 'cita_reagendar' cita.pk %}" class="btn btn-suave">
+        <svg class="icono-sm"><use href="#i-calendario"/></svg> Reagendar
+    </a>
+</div>
+
+<details class="det-cancelar">
+    <summary>Cancelar esta cita</summary>
+    <form method="post" action="{% url 'cita_cancelar' cita.pk %}">
+        {% csrf_token %}<input type="hidden" name="next" class="volver-aqui">
+        <div class="campo">{{ form_cancelar.motivo.label_tag }}{{ form_cancelar.motivo }}</div>
+        <div class="campo">{{ form_cancelar.detalle.label_tag }}{{ form_cancelar.detalle }}</div>
+        <p class="ayuda">La cita no se borra: queda registrada como cancelada y la hora se libera.</p>
+        <button type="submit" class="btn btn-peligro">Cancelar cita</button>
+    </form>
+</details>
+{% endif %}
