@@ -32,6 +32,9 @@ class BaseTablero(TestCase):
             nombre='Urgencia', duracion_minutos=45, precio=35000)
 
         self._bloque = 0
+        # Las pantallas exigen permisos: el usuario de prueba entra como Administración.
+        from django.contrib.auth.models import Group
+        self.tutor.groups.add(Group.objects.get(name='Administración'))
         self.client.force_login(self.tutor)
 
     def crear_cita(self, estado, tipo=None, dias=-5):

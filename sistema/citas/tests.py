@@ -171,6 +171,9 @@ class VistasCitasTest(BaseCitas):
 
     def setUp(self):
         super().setUp()
+        # Las pantallas exigen permisos: el usuario de prueba entra como Administración.
+        from django.contrib.auth.models import Group
+        self.tutor.groups.add(Group.objects.get(name='Administración'))
         self.client.force_login(self.tutor)
 
     def test_el_listado_exige_haber_iniciado_sesion(self):

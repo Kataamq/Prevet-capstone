@@ -63,7 +63,7 @@
                         </span>
                     </td>
                     <td style="text-align:right">
-                        {% if c.estado == 'pendiente' and c.fecha <= hoy %}
+                        {% if perms.citas.change_cita and c.estado == 'pendiente' and c.fecha <= hoy %}
                         <form method="post" action="/citas/{{ c.pk }}/no-asistio/" style="display:inline">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-suave" style="font-size:.78rem">

@@ -60,6 +60,9 @@ class VistaMascotasTest(BaseMascotas):
                                sexo='macho')
         Mascota.objects.create(nombre='Kira', especie=self.gato,
                                sexo='hembra')
+        # Las pantallas exigen permisos: el usuario de prueba entra como Administración.
+        from django.contrib.auth.models import Group
+        self.tutor.groups.add(Group.objects.get(name='Administración'))
         self.client.force_login(self.tutor)
 
     def test_la_ficha_exige_haber_iniciado_sesion(self):

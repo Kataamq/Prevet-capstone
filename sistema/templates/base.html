@@ -75,24 +75,35 @@
         <nav class="sb-nav">
             {% if user.is_authenticated %}
 
+            {# Cada enlace aparece solo si el grupo de la persona le da ese permiso. #}
             <div class="sb-seccion">Gestión</div>
             <a href="/" class="sb-link {% if seccion == 'inicio' %}activo{% endif %}">
                 <svg class="icono"><use href="#i-inicio"/></svg> Inicio
             </a>
+            {% if perms.citas.view_cita %}
             <a href="/citas/" class="sb-link {% if seccion == 'citas' %}activo{% endif %}">
                 <svg class="icono"><use href="#i-calendario"/></svg> Citas
             </a>
+            {% endif %}
+            {% if perms.mascotas.view_mascota %}
             <a href="/mascotas/" class="sb-link {% if seccion == 'mascotas' %}activo{% endif %}">
                 <svg class="icono"><use href="#i-paw"/></svg> Mascotas
             </a>
+            {% endif %}
 
+            {% if perms.citas.ver_riesgo or perms.citas.ver_indicadores %}
             <div class="sb-seccion">Análisis</div>
+            {% if perms.citas.ver_riesgo %}
             <a href="/riesgo/" class="sb-link {% if seccion == 'riesgo' %}activo{% endif %}">
                 <svg class="icono"><use href="#i-alerta"/></svg> Horas en riesgo
             </a>
+            {% endif %}
+            {% if perms.citas.ver_indicadores %}
             <a href="/indicadores/" class="sb-link {% if seccion == 'indicadores' %}activo{% endif %}">
                 <svg class="icono"><use href="#i-grafico"/></svg> Indicadores
             </a>
+            {% endif %}
+            {% endif %}
 
             {% if es_admin %}
             <div class="sb-seccion">Administración</div>

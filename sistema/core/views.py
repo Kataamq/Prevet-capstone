@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.db.models import Sum
 from django.shortcuts import render
 from django.utils import timezone
@@ -9,6 +9,11 @@ from citas.models import Cita
 @login_required
 def inicio(request):
     """Tablero con los indicadores de inasistencia."""
+
+    # Es la página a la que llega todo el mundo al iniciar sesión. Quien
+    # todavía no tiene permisos ve un aviso en vez de un error.
+    if not request.user.has_perm('citas.view_cita'):
+        return render(request, 'core/sin_permisos.html', {'seccion': 'inicio'})
 
     hoy = timezone.localdate()
 
@@ -56,6 +61,7 @@ def inicio(request):
     return render(request, 'core/inicio.html', contexto)
 
 @login_required
+@permission_required('citas.ver_riesgo', raise_exception=True)
 def riesgo(request):
     """Citas pendientes ordenadas por su riesgo de inasistencia."""
 
@@ -90,6 +96,7 @@ def riesgo(request):
 
 
 @login_required
+@permission_required('citas.ver_indicadores', raise_exception=True)
 def indicadores(request):
     """Análisis de las inasistencias, factor por factor del modelo de riesgo."""
 

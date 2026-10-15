@@ -143,3 +143,9 @@ class Cita(models.Model):
         verbose_name_plural = "Citas"
         unique_together = ('veterinario', 'fecha', 'hora')
         ordering = ['-fecha', '-hora']
+        # Además de ver, agregar, modificar y eliminar citas (que Django crea
+        # solo), estas dos pantallas de análisis tienen su propio permiso.
+        permissions = [
+            ('ver_riesgo', 'Ver las horas en riesgo'),
+            ('ver_indicadores', 'Ver los indicadores'),
+        ]

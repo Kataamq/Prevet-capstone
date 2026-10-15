@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import ValidationError
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
 from mascotas.models import Cliente
@@ -12,6 +12,7 @@ from .models import Cita
 
 
 @login_required
+@permission_required('citas.view_cita', raise_exception=True)
 def listado(request):
     """Listado de citas con filtro por estado."""
 
@@ -48,13 +49,14 @@ def listado(request):
 
 
 @login_required
+@permission_required('citas.change_cita', raise_exception=True)
 def marcar_no_asistio(request, pk):
     """Registra que el tutor no se presentó a su hora."""
 
     if request.method != 'POST':
         return redirect('citas')
 
-    cita = Cita.objects.get(pk=pk)
+    cita = get_object_or_404(Cita, pk=pk)
     cita.estado = 'no_asistio'
     cita.fecha_marcada_no_asistio = timezone.now()
     cita.save()
