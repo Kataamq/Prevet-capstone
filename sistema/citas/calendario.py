@@ -15,13 +15,15 @@ from . import riesgo
 from .forms import CancelarForm, ReagendarForm
 from .models import Cita
 
-# Color de cada cita en el calendario según su estado.
+# Color de cada cita en el calendario según su estado, en tonos de la
+# paleta del inicio de sesión. El texto va oscuro para que se lea encima.
 COLORES = {
-    'pendiente': '#6b5ad4',
-    'completada': '#17945f',
-    'cancelada': '#9a96ad',
-    'no_asistio': '#d94a5e',
+    'pendiente': '#a594f2',
+    'completada': '#7fe0b4',
+    'cancelada': '#8d85b8',
+    'no_asistio': '#f6a9b6',
 }
+COLOR_TEXTO = '#1a1338'
 
 
 def _veterinarios():
@@ -89,6 +91,7 @@ def eventos(request):
             'start': datetime.datetime.combine(c.fecha, c.hora).isoformat(),
             'end': datetime.datetime.combine(c.fecha, c.hora_termino).isoformat(),
             'color': COLORES.get(c.estado),
+            'textColor': COLOR_TEXTO,
             'classNames': [f'estado-{c.estado}'] + (['riesgo-alto'] if nivel == 'alto' else []),
             'extendedProps': {
                 'cliente': c.cliente.nombre_completo,

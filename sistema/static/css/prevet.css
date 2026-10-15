@@ -1602,9 +1602,15 @@ table tbody tr:hover { background: var(--hover); }
     background: var(--panel); border: 1px solid var(--borde); padding: .3rem .7rem;
 }
 .cal-card .fc a { color: inherit; }
-.cal-card .fc-event { cursor: pointer; border-radius: var(--radio); font-size: .8rem; }
+.cal-card .fc-event { cursor: pointer; border-radius: 8px; font-size: .8rem; font-weight: 600; }
+.cal-card .fc-event.estado-cancelada { opacity: .7; }
+/* En la vista de mes las citas son un punto y un texto: el texto va claro. */
+.cal-card .fc-daygrid-dot-event { color: var(--texto); }
+.cal-card .fc-daygrid-dot-event:hover { background: var(--hover); }
+.cal-card .fc-timegrid-now-indicator-line { border-color: #f0c98a; }
+.cal-card .fc-timegrid-now-indicator-arrow { border-color: #f0c98a; border-top-color: transparent; border-bottom-color: transparent; }
 .cal-card .fc-event.estado-cancelada .fc-event-title { text-decoration: line-through; }
-.cal-card .fc-event.riesgo-alto { box-shadow: inset 4px 0 0 #f2b33d; }
+.cal-card .fc-event.riesgo-alto { box-shadow: inset 4px 0 0 #f0c98a, 0 0 0 1px #f0c98a; }
 
 @media (max-width: 640px) {
     .cal-card .fc .fc-toolbar { flex-direction: column; gap: .6rem; }
