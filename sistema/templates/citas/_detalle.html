@@ -2,11 +2,15 @@
 
 {# ---------- Encabezado ---------- #}
 <header class="det-head">
+    {% if cita.mascota.foto_version %}
+    <img class="det-avatar det-foto ampliable" alt="Foto de {{ cita.mascota.nombre }}" src="{% url 'mascota_foto' cita.mascota.pk %}?v={{ cita.mascota.foto_version }}">
+    {% else %}
     <div class="det-avatar">{{ cita.mascota.especie.emoji }}</div>
+    {% endif %}
     <div class="det-head-txt">
         <h3>{{ cita.mascota.nombre }}</h3>
         <div class="det-sub">
-            {{ cita.mascota.especie.nombre }}{% if cita.mascota.raza %} · {{ cita.mascota.raza.nombre }}{% endif %}{% if cita.mascota.edad %} · {{ cita.mascota.edad }}{% endif %}
+            {{ cita.mascota.especie.nombre }}{% if cita.mascota.raza %} · {{ cita.mascota.raza.nombre }}{% endif %}{% if cita.mascota.edad %} · {{ cita.mascota.edad }}{% endif %}{% if cita.mascota.peso_kg %} · {{ cita.mascota.peso_kg|floatformat:1 }} kg{% endif %}
         </div>
     </div>
 </header>
@@ -15,6 +19,14 @@
     <span class="det-estado ev-{{ cita.estado }}">{{ cita.get_estado_display }}</span>
     {% if cita.hora_llegada %}<span class="det-estado ev-completada">Llegó {{ cita.hora_llegada|time:"H:i" }}</span>{% endif %}
 </div>
+
+{% if cita.mascota.alergias or cita.mascota.observaciones or cita.mascota.condiciones %}
+<section class="det-alerta">
+    {% if cita.mascota.alergias %}<div><b>⚠ Alergias:</b> {{ cita.mascota.alergias }}</div>{% endif %}
+    {% if cita.mascota.condiciones %}<div><b>Condiciones:</b> {{ cita.mascota.condiciones }}</div>{% endif %}
+    {% if cita.mascota.observaciones %}<div><b>Manejo:</b> {{ cita.mascota.observaciones }}</div>{% endif %}
+</section>
+{% endif %}
 
 {# ---------- Datos de la cita ---------- #}
 <section class="det-sec">
@@ -83,6 +95,12 @@
     {% if accion and nivel != 'bajo' %}
     <div class="det-sugerencia"><strong>Sugerencia:</strong> {{ accion }}</div>
     {% endif %}
+    {% if guion %}
+    <details class="guion">
+        <summary>Qué decirle al tutor</summary>
+        <ul>{% for g in guion %}<li>{{ g }}</li>{% endfor %}</ul>
+    </details>
+    {% endif %}
 </section>
 {% endif %}
 
@@ -116,6 +134,9 @@
             <button type="submit" class="btn btn-suave">✋ Llegó</button>
         </form>
         {% endif %}
+        <a href="{% url 'cita_editar' cita.pk %}" class="btn btn-suave">
+            <svg class="icono-sm"><use href="#i-editar"/></svg> Editar
+        </a>
         <a href="{% url 'cita_reagendar' cita.pk %}" class="btn btn-suave">
             <svg class="icono-sm"><use href="#i-calendario"/></svg> Reagendar
         </a>

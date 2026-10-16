@@ -122,3 +122,26 @@ class IndicadoresTest(BaseTablero):
 
         general = self.client.get('/indicadores/').context['general']
         self.assertEqual(general['perdido_txt'], '35.000')
+
+
+class BuscadorGlobalTest(TestCase):
+    """El buscador de la barra superior encuentra clientes, mascotas y citas."""
+
+    def setUp(self):
+        from django.contrib.auth.models import Group
+
+        from mascotas.models import Cliente, Especie, Mascota, Tenencia
+        usuario = User.objects.create_user('recep')
+        usuario.groups.add(Group.objects.get(name='Recepción'))
+        self.client.force_login(usuario)
+        cliente = Cliente.objects.create(rut='15234871-1', nombres='Javiera', apellidos='Pérez')
+        luna = Mascota.objects.create(nombre='Luna', especie=Especie.objects.create(nombre='Gato'), sexo='hembra')
+        Tenencia.objects.create(cliente=cliente, mascota=luna, es_principal=True)
+
+    def test_encuentra_al_cliente_y_su_mascota(self):
+        contexto = self.client.get('/buscar/?q=javiera').context
+        self.assertEqual(contexto['totales']['clientes'], 1)
+        self.assertEqual(contexto['totales']['mascotas'], 1)
+
+    def test_con_una_letra_no_busca(self):
+        self.assertEqual(self.client.get('/buscar/?q=j').context['total'], 0)

@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block titulo %}Reagendar{% endblock %}
+{% block migas %}<a href="/">Inicio</a><span class="sep">›</span><a href="{% url 'calendario' %}">Calendario</a><span class="sep">›</span><span>Reagendar</span>{% endblock %}
 {% block encabezado %}Reagendar la cita de {{ cita.mascota.nombre }}{% endblock %}
 {% block subtitulo %}Hoy está para el {{ cita.fecha|date:"d/m/Y" }} a las {{ cita.hora|time:"H:i" }} · cliente {{ cita.cliente.nombre_completo }}{% endblock %}
 

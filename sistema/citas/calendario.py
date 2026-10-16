@@ -1,8 +1,6 @@
 """Calendario de citas: vistas por día, semana y mes, y las acciones sobre cada cita."""
 
 import datetime
-import re
-from urllib.parse import quote
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
@@ -14,6 +12,7 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.http import require_POST
 
 from . import riesgo
+from .contacto import enlace_whatsapp, guion_llamada, mensaje_segun_riesgo
 from .forms import CancelarForm, ReagendarForm
 from .models import Cita
 
@@ -108,8 +107,11 @@ def detalle(request, pk):
     hoy = timezone.localdate()
 
     nivel = puntaje = detalle_riesgo = accion = None
+    guion = []
     if cita.estado == 'pendiente':
-        puntaje, nivel, accion, detalle_riesgo = riesgo.puntuar(cita, riesgo.estadisticas())
+        stats = riesgo.estadisticas()
+        puntaje, nivel, accion, detalle_riesgo = riesgo.puntuar(cita, stats)
+        guion = guion_llamada(cita, nivel, stats)
 
     return render(request, 'citas/_detalle.html', {
         'cita': cita,
@@ -121,27 +123,26 @@ def detalle(request, pk):
         'puntaje': puntaje,
         'detalle_riesgo': detalle_riesgo,
         'accion': accion,
-        'whatsapp': _enlace_whatsapp(cita),
+        'whatsapp': _enlace_whatsapp(cita, nivel),
+        'guion': guion,
         'duracion': cita.tipo_atencion.duracion_minutos,
         'form_cancelar': CancelarForm(),
     })
 
 
-def _enlace_whatsapp(cita):
-    """Enlace que abre WhatsApp con un recordatorio listo para enviar.
+def _enlace_whatsapp(cita, nivel=None):
+    """Enlace de WhatsApp con el mensaje listo para enviar.
 
-    No usa ningún servicio pagado: wa.me abre el chat en el teléfono o en
-    WhatsApp Web, y quien atiende decide si lo envía.
+    Si se conoce el riesgo de la cita, el mensaje se adapta a él (ver
+    contacto.py); si no, es un recordatorio general.
     """
-    digitos = re.sub(r'\D', '', cita.cliente.telefono or '')
-    if len(digitos) == 9:            # 9 1234 5678 -> se le agrega el 56 de Chile
-        digitos = '56' + digitos
-    if len(digitos) < 11:
-        return None
-    mensaje = (f'Hola {cita.cliente.nombres}, te escribimos de la clínica para recordarte '
-               f'la hora de {cita.mascota.nombre} el {cita.fecha:%d/%m} a las {cita.hora:%H:%M}. '
-               f'¿Nos confirmas tu asistencia?')
-    return f'https://wa.me/{digitos}?text={quote(mensaje)}'
+    if nivel:
+        mensaje = mensaje_segun_riesgo(cita, nivel)
+    else:
+        mensaje = (f'Hola {cita.cliente.nombres}, te escribimos de la clínica para recordarte '
+                   f'la hora de {cita.mascota.nombre} el {cita.fecha:%d/%m} a las {cita.hora:%H:%M}. '
+                   f'¿Nos confirmas tu asistencia?')
+    return enlace_whatsapp(cita.cliente.telefono, mensaje)
 
 
 def _cita_pendiente(request, pk):
